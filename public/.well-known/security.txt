@@ -1,0 +1,20 @@
+# VGIL vulnerability disclosure
+#
+# If you have found a security issue in this service, we want to hear about
+# it. Report it to the address below and we will acknowledge within one
+# business day.
+#
+# Please do not run automated scanners against production, access or modify
+# data that is not yours, or degrade service for other users. Testing that
+# stays within those bounds will not result in legal action from us.
+
+Contact: mailto:security@vgil.io
+Contact: https://vgil.io/contact.html
+
+Expires: 2027-08-26T00:00:00.000Z
+
+Preferred-Languages: en
+
+Canonical: https://vgil.io/.well-known/security.txt
+
+Policy: https://vgil.io/compliance.html

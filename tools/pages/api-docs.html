@@ -1,0 +1,400 @@
+<main>
+
+  <div class="page-head">
+    <div class="wrap">
+      <span class="eyebrow">Developers</span>
+      <h1>API reference</h1>
+      <p class="lead mt-1">
+        Everything the console does, it does over this API. Pull alerts into your SIEM, drive
+        incident workflow from a script, or export the queue for reporting — the endpoints below
+        are the same ones the web console calls.
+      </p>
+    </div>
+  </div>
+
+  <!-- ==================================================== AUTHENTICATION -->
+  <section>
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Authentication</span>
+        <h2>Two kinds of credential</h2>
+        <p class="lead mt-1">
+          Session tokens are for people; API keys are for machines. They differ in what they can
+          do, which is the point.
+        </p>
+      </div>
+
+      <div class="grid g2 mt-3">
+        <div class="panel reveal">
+          <div class="panel-head"><span class="panel-title">Session token</span></div>
+          <div class="panel-body">
+            <p class="text-muted">
+              Issued by <code class="mono">POST /api/auth/login</code>, valid for 12 hours, and
+              revocable from the account page. Full read and write access at the signed-in
+              user's role.
+            </p>
+            <pre class="code mt-2"><code>curl -s https://vgil.io/api/auth/login \
+  -H 'content-type: application/json' \
+  -d '{"email":"you@example.com","password":"…"}'</code></pre>
+            <p class="text-muted mt-2" style="font-size:.85rem">
+              If the account has two-factor authentication enabled, this returns
+              <code class="mono">{"mfaRequired":true,"challenge":"…"}</code> instead of a token.
+              Exchange the challenge and a code at
+              <code class="mono">POST /api/auth/login/mfa</code>.
+            </p>
+          </div>
+        </div>
+
+        <div class="panel reveal" data-delay="120">
+          <div class="panel-head"><span class="panel-title">API key</span></div>
+          <div class="panel-body">
+            <p class="text-muted">
+              Created on the account page, prefixed <code class="mono">vgil_</code>, and shown
+              once. Keys are <strong>read-only</strong> — a write attempt returns
+              <code class="mono">403 read_only_credential</code> rather than failing obscurely.
+            </p>
+            <pre class="code mt-2"><code>curl -s https://vgil.io/api/export/alerts \
+  -H 'x-api-key: vgil_xxxxxxxxxxxxxxxx'</code></pre>
+            <p class="text-muted mt-2" style="font-size:.85rem">
+              An unattended credential should not be able to close an incident. If you need a
+              script to change state, use a session token belonging to a service account.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="notice mt-3 reveal">
+        <strong>Keys are stored hashed.</strong> The plaintext appears exactly once, in the
+        response that creates it. There is no endpoint that returns a key again — a lost key is
+        revoked and replaced, not recovered.
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================= ENDPOINTS -->
+  <section class="alt">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Endpoints</span>
+        <h2>Reference</h2>
+        <p class="lead mt-1">
+          Base URL <code class="mono">https://vgil.io/api</code>. All responses are JSON unless
+          an export format says otherwise.
+        </p>
+      </div>
+
+      <div class="panel mt-3 reveal">
+        <div class="panel-head"><span class="panel-title">Alerts</span></div>
+        <div class="panel-body table-scroll">
+          <table class="data">
+            <thead>
+              <tr><th>Method</th><th>Path</th><th>Auth</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><span class="badge">GET</span></td><td class="mono">/alerts</td><td>Optional</td><td>Paginated alert queue. Filters: <code class="mono">severity</code>, <code class="mono">status</code>, <code class="mono">tactic</code>, <code class="mono">zone</code>, <code class="mono">assignee</code>, <code class="mono">since</code>, <code class="mono">q</code>, <code class="mono">sort</code>, <code class="mono">order</code>, <code class="mono">page</code>, <code class="mono">limit</code>.</td></tr>
+              <tr><td><span class="badge">GET</span></td><td class="mono">/alerts/:id</td><td>Optional</td><td>A single alert with its analyst notes.</td></tr>
+              <tr><td><span class="badge">GET</span></td><td class="mono">/alerts/stream</td><td>Optional</td><td>Server-sent events. New detections arrive as they fire.</td></tr>
+              <tr><td><span class="badge is-high">PATCH</span></td><td class="mono">/alerts/:id</td><td>Session</td><td>Change status, assign, or append a note.</td></tr>
+              <tr><td><span class="badge is-high">POST</span></td><td class="mono">/alerts/:id/escalate</td><td>Session</td><td>Promote an alert to a tracked incident.</td></tr>
+              <tr><td><span class="badge">GET</span></td><td class="mono">/alerts/meta/filters</td><td>Optional</td><td>Filter option lists for building a UI.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel mt-3 reveal">
+        <div class="panel-head"><span class="panel-title">Incidents</span></div>
+        <div class="panel-body table-scroll">
+          <table class="data">
+            <thead>
+              <tr><th>Method</th><th>Path</th><th>Auth</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><span class="badge">GET</span></td><td class="mono">/incidents</td><td>Optional</td><td>Paginated incident queue. Filters: <code class="mono">status</code>, <code class="mono">severity</code>, <code class="mono">q</code>, <code class="mono">page</code>, <code class="mono">limit</code>.</td></tr>
+              <tr><td><span class="badge">GET</span></td><td class="mono">/incidents/:id</td><td>Optional</td><td>One incident with its full response timeline.</td></tr>
+              <tr><td><span class="badge is-high">POST</span></td><td class="mono">/incidents</td><td>Session</td><td>Open an incident manually.</td></tr>
+              <tr><td><span class="badge is-high">PATCH</span></td><td class="mono">/incidents/:id</td><td>Session</td><td>Change status or severity, reassign, or add a timeline note.</td></tr>
+              <tr><td><span class="badge is-crit">DELETE</span></td><td class="mono">/incidents/:id</td><td>Admin</td><td>Remove an incident and its timeline.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel mt-3 reveal">
+        <div class="panel-head"><span class="panel-title">Export</span></div>
+        <div class="panel-body table-scroll">
+          <table class="data">
+            <thead>
+              <tr><th>Method</th><th>Path</th><th>Auth</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><span class="badge">GET</span></td><td class="mono">/export/incidents</td><td>Session or key</td><td>CSV by default, <code class="mono">?format=json</code> for JSON. Accepts the same filters as the incident queue.</td></tr>
+              <tr><td><span class="badge">GET</span></td><td class="mono">/export/alerts</td><td>Session or key</td><td>As above, for alerts.</td></tr>
+              <tr><td><span class="badge">GET</span></td><td class="mono">/export/audit</td><td>Admin</td><td>The audit trail, for compliance evidence.</td></tr>
+              <tr><td><span class="badge">GET</span></td><td class="mono">/export/all</td><td>Admin</td><td>Whole-tenant JSON. Nested, so no CSV form.</td></tr>
+            </tbody>
+          </table>
+          <p class="text-muted mt-2" style="font-size:.85rem">
+            Exports are capped at 5,000 rows per request and every one is written to the audit
+            log with the caller's identity. A whole-table pull is the shape of request that
+            precedes data exfiltration, so it is attributable by design.
+          </p>
+        </div>
+      </div>
+
+
+      <div class="panel mt-3 reveal">
+        <div class="panel-head"><span class="panel-title">Detection engineering</span></div>
+        <div class="panel-body table-scroll">
+          <table class="data">
+            <thead>
+              <tr><th>Method</th><th>Path</th><th>Auth</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><span class="badge">GET</span></td><td class="mono">/detections</td><td>Optional</td><td>Built-in and custom rules together. <code class="mono">custom</code> marks which are editable. Filters: <code class="mono">custom</code>, <code class="mono">severity</code>, <code class="mono">tactic</code>, <code class="mono">q</code>.</td></tr>
+              <tr><td><span class="badge">GET</span></td><td class="mono">/detections/meta</td><td>Public</td><td>Valid severities, tactics and asset types for the rule editor.</td></tr>
+              <tr><td><span class="badge is-high">POST</span></td><td class="mono">/detections</td><td>Session</td><td>Author a rule. It joins the same detection pool as the built-in catalogue.</td></tr>
+              <tr><td><span class="badge is-high">PATCH</span></td><td class="mono">/detections/:id</td><td>Session</td><td>Edit, enable or disable a custom rule.</td></tr>
+              <tr><td><span class="badge is-crit">DELETE</span></td><td class="mono">/detections/:id</td><td>Session</td><td>Remove a custom rule.</td></tr>
+              <tr><td><span class="badge is-high">POST</span></td><td class="mono">/detections/:id/preview</td><td>Session</td><td>Sample alert for a rule, without writing it to the queue.</td></tr>
+            </tbody>
+          </table>
+          <p class="text-muted mt-2" style="font-size:.85rem">
+            Built-in rules are read-only. Editing a shipped detection in place makes an upstream
+            rule indistinguishable from a local change, with no way back to the original —
+            disable it and author your own instead.
+          </p>
+        </div>
+      </div>
+
+      <div class="panel mt-3 reveal">
+        <div class="panel-head"><span class="panel-title">Containment records</span></div>
+        <div class="panel-body table-scroll">
+          <table class="data">
+            <thead>
+              <tr><th>Method</th><th>Path</th><th>Auth</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><span class="badge">GET</span></td><td class="mono">/containment/actions</td><td>Session</td><td>The action catalogue: host isolation, session revocation, credential reset, account disable, edge block, process termination.</td></tr>
+              <tr><td><span class="badge">GET</span></td><td class="mono">/containment</td><td>Session</td><td>Recent records across all incidents.</td></tr>
+              <tr><td><span class="badge">GET</span></td><td class="mono">/containment/incident/:id</td><td>Session</td><td>Records for one incident.</td></tr>
+              <tr><td><span class="badge is-high">POST</span></td><td class="mono">/containment</td><td>Session</td><td>Record a containment decision. Requires a reason, and writes to the incident timeline and audit log.</td></tr>
+              <tr><td><span class="badge is-high">POST</span></td><td class="mono">/containment/:id/revert</td><td>Session</td><td>Record that containment was lifted, with a reason.</td></tr>
+            </tbody>
+          </table>
+
+          <div class="notice notice-warn mt-2">
+            <strong>These endpoints record decisions. They do not execute anything.</strong>
+            VGIL has no agents connected to it, so an endpoint reporting "host isolated" would be
+            asserting something it cannot know — the same reason device status is derived from
+            telemetry rather than set by whoever asks. What an incident needs afterwards is the
+            defensible account: what was contained, who decided, under whose authority, when, and
+            when it was lifted.
+          </div>
+        </div>
+      </div>
+
+      <div class="panel mt-3 reveal">
+        <div class="panel-head"><span class="panel-title">Notifications</span></div>
+        <div class="panel-body table-scroll">
+          <table class="data">
+            <thead>
+              <tr><th>Method</th><th>Path</th><th>Auth</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><span class="badge">GET</span></td><td class="mono">/account/notifications</td><td>Session</td><td>Your alerting preferences, queued digest count and the active transport.</td></tr>
+              <tr><td><span class="badge is-high">PATCH</span></td><td class="mono">/account/notifications</td><td>Session</td><td>Set severity threshold, cadence, quiet hours and which event types you want.</td></tr>
+              <tr><td><span class="badge is-high">POST</span></td><td class="mono">/account/notifications/test</td><td>Session</td><td>Send one message to yourself to prove the settings work.</td></tr>
+              <tr><td><span class="badge is-high">POST</span></td><td class="mono">/account/notifications/digest</td><td>Session</td><td>Flush your queued digest immediately.</td></tr>
+              <tr><td><span class="badge">GET</span></td><td class="mono">/account/notifications/log</td><td>Session</td><td>Your delivery history.</td></tr>
+              <tr><td><span class="badge">GET</span></td><td class="mono">/admin/notifications</td><td>Admin</td><td>Tenant-wide delivery log and transport status.</td></tr>
+            </tbody>
+          </table>
+          <p class="text-muted mt-2" style="font-size:.85rem">
+            Alerting is opt-in. Quiet hours and digest cadence hold non-critical events for the
+            next batch; a critical event always comes straight through, because someone who asked
+            not to be woken still needs to hear that a domain controller is compromised.
+            With no SMTP relay configured, notifications are still selected, rendered and logged —
+            they appear in the delivery log marked <code class="mono">spooled</code> rather than
+            being sent, so the failure mode is a visible record rather than silence.
+          </p>
+        </div>
+      </div>
+
+
+      <div class="panel mt-3 reveal">
+        <div class="panel-head"><span class="panel-title">SOC operations</span></div>
+        <div class="panel-body table-scroll">
+          <table class="data">
+            <thead>
+              <tr><th>Method</th><th>Path</th><th>Auth</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><span class="badge">GET</span></td><td class="mono">/soc/status</td><td>Public</td><td>Who is on console now, whether every UTC hour is covered, and the next handover.</td></tr>
+              <tr><td><span class="badge">GET</span></td><td class="mono">/soc/metrics</td><td>Public</td><td>Measured median and p90 time-to-triage, and median time-to-bridge. Nulls where there is no sample.</td></tr>
+              <tr><td><span class="badge">GET</span></td><td class="mono">/soc/tuning</td><td>Session or key</td><td>Per-rule false-positive analysis with a suggested change.</td></tr>
+              <tr><td><span class="badge">GET</span></td><td class="mono">/soc/shifts</td><td>Public</td><td>The rota, with coverage gaps.</td></tr>
+              <tr><td><span class="badge is-high">POST</span></td><td class="mono">/soc/shifts</td><td>Admin</td><td>Add a shift window. The response reports whether coverage is still complete.</td></tr>
+              <tr><td><span class="badge is-crit">DELETE</span></td><td class="mono">/soc/shifts/:id</td><td>Admin</td><td>Remove one, with a warning naming any gap it opens.</td></tr>
+              <tr><td><span class="badge">GET</span></td><td class="mono">/soc/pods</td><td>Public</td><td>Analyst pods and their members by tier.</td></tr>
+              <tr><td><span class="badge is-high">POST</span></td><td class="mono">/soc/pods/:id/members</td><td>Admin</td><td>Assign an analyst at tier 1, 2 or 3.</td></tr>
+              <tr><td><span class="badge is-high">POST</span></td><td class="mono">/soc/handovers</td><td>Session</td><td>Hand the console over. Snapshots the open incident queue.</td></tr>
+              <tr><td><span class="badge is-high">POST</span></td><td class="mono">/soc/escalations</td><td>Session</td><td>Raise the P1 bridge. Notifies immediately, ignoring digest and quiet-hours settings.</td></tr>
+              <tr><td><span class="badge is-high">POST</span></td><td class="mono">/soc/escalations/:id/acknowledge</td><td>Session</td><td>Take the bridge. The gap from raising is recorded.</td></tr>
+              <tr><td><span class="badge is-high">POST</span></td><td class="mono">/alerts/:id/false-positive</td><td>Session</td><td>Mark a detection wrong, with a category that drives the tuning suggestion.</td></tr>
+            </tbody>
+          </table>
+
+          <div class="notice mt-2">
+            <strong>These numbers are computed, not configured.</strong> Median triage comes from
+            when each alert first moved out of <code class="mono">new</code>; the false-positive
+            rate comes from what analysts marked. Where nothing has been measured yet the API
+            returns <code class="mono">null</code> and the console shows a dash, because
+            "no data" and "instant" are different answers.
+          </div>
+        </div>
+      </div>
+
+      <div class="panel mt-3 reveal">
+        <div class="panel-head"><span class="panel-title">Account and threat intelligence</span></div>
+        <div class="panel-body table-scroll">
+          <table class="data">
+            <thead>
+              <tr><th>Method</th><th>Path</th><th>Auth</th><th>Description</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><span class="badge">GET</span></td><td class="mono">/account</td><td>Session</td><td>The current profile.</td></tr>
+              <tr><td><span class="badge">GET</span></td><td class="mono">/account/sessions</td><td>Session</td><td>Where this account is signed in.</td></tr>
+              <tr><td><span class="badge">GET</span></td><td class="mono">/account/api-keys</td><td>Session</td><td>Your keys, without the secrets.</td></tr>
+              <tr><td><span class="badge is-high">POST</span></td><td class="mono">/account/api-keys</td><td>Session</td><td>Mint a key. The plaintext is in this response only.</td></tr>
+              <tr><td><span class="badge">GET</span></td><td class="mono">/threats/actors</td><td>Public</td><td>Tracked threat actors.</td></tr>
+              <tr><td><span class="badge">GET</span></td><td class="mono">/threats/iocs</td><td>Public</td><td>Indicator feed with decaying confidence.</td></tr>
+              <tr><td><span class="badge">GET</span></td><td class="mono">/threats/attack-matrix</td><td>Public</td><td>ATT&amp;CK coverage by tactic.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================== WEBHOOKS -->
+  <section>
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Webhooks</span>
+        <h2>Verifying a delivery</h2>
+        <p class="lead mt-1">
+          An administrator can subscribe an endpoint to incident events. Every delivery is
+          signed, so your receiver can tell a real call from anyone who learned the URL.
+        </p>
+      </div>
+
+      <div class="grid g2 mt-3">
+        <div class="panel reveal">
+          <div class="panel-head"><span class="panel-title">Headers</span></div>
+          <div class="panel-body table-scroll">
+            <table class="data">
+              <tbody>
+                <tr><td class="mono">x-vgil-event</td><td>Event name, e.g. <code class="mono">incident.opened</code></td></tr>
+                <tr><td class="mono">x-vgil-timestamp</td><td>Unix seconds when the call was signed</td></tr>
+                <tr><td class="mono">x-vgil-signature</td><td><code class="mono">sha256=&lt;hex&gt;</code></td></tr>
+              </tbody>
+            </table>
+            <p class="text-muted mt-2" style="font-size:.85rem">
+              Events: <code class="mono">incident.opened</code>,
+              <code class="mono">incident.escalated</code>,
+              <code class="mono">incident.closed</code>,
+              <code class="mono">alert.critical</code>,
+              <code class="mono">auth.mfa.disabled</code>.
+            </p>
+          </div>
+        </div>
+
+        <div class="panel reveal" data-delay="120">
+          <div class="panel-head"><span class="panel-title">Checking the signature</span></div>
+          <div class="panel-body">
+            <pre class="code"><code>const crypto = require('crypto');
+
+function verify(req, secret) {
+  const ts  = req.get('x-vgil-timestamp');
+  const sig = req.get('x-vgil-signature');
+
+  // Reject anything older than five minutes, or a
+  // captured payload can be replayed indefinitely.
+  const age = Math.abs(Date.now() / 1000 - Number(ts));
+  if (!ts || age > 300) return false;
+
+  const expected = 'sha256=' + crypto
+    .createHmac('sha256', secret)
+    .update(ts + '.' + req.rawBody)
+    .digest('hex');
+
+  return crypto.timingSafeEqual(
+    Buffer.from(sig), Buffer.from(expected)
+  );
+}</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="notice notice-warn mt-3 reveal">
+        <strong>Sign over the raw body.</strong> Re-serialising the parsed JSON will change key
+        order or whitespace and the signature will not match. Capture the raw bytes before your
+        JSON middleware runs.
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================ ERRORS AND RATE LIMITS -->
+  <section class="alt">
+    <div class="wrap">
+      <div class="grid g2">
+        <div class="reveal">
+          <h2>Errors</h2>
+          <p class="lead mt-1">
+            Every failure returns the same shape: a stable <code class="mono">error</code> code
+            to branch on, and a <code class="mono">message</code> written for a human.
+          </p>
+          <pre class="code mt-2"><code>{
+  "error": "read_only_credential",
+  "message": "API keys are read-only. Use a
+              session token for write operations."
+}</code></pre>
+          <p class="text-muted mt-2" style="font-size:.85rem">
+            Validation failures add a <code class="mono">fields</code> object keyed by input
+            name. Internal errors carry a <code class="mono">requestId</code> — quote it if you
+            report a problem.
+          </p>
+        </div>
+
+        <div class="reveal" data-delay="120">
+          <h2>Rate limits</h2>
+          <p class="lead mt-1">
+            Per client address, per bucket. Exceeding one returns
+            <code class="mono">429</code> with a <code class="mono">Retry-After</code> header.
+          </p>
+          <div class="panel mt-2">
+            <div class="panel-body table-scroll">
+              <table class="data">
+                <thead><tr><th>Bucket</th><th>Budget</th></tr></thead>
+                <tbody>
+                  <tr><td>General API</td><td class="mono">300 / minute</td></tr>
+                  <tr><td>Alert queue</td><td class="mono">240 / minute</td></tr>
+                  <tr><td>Export</td><td class="mono">20 / minute</td></tr>
+                  <tr><td>Sign-in</td><td class="mono">12 / 15 minutes</td></tr>
+                  <tr><td>Registration</td><td class="mono">6 / hour</td></tr>
+                  <tr><td>Key creation</td><td class="mono">10 / hour</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <p class="text-muted mt-2" style="font-size:.85rem">
+            Limits are counted in-process. Behind more than one instance, each holds its own
+            counters — size accordingly.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>

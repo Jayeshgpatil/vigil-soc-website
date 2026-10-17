@@ -1,0 +1,20 @@
+# Normalise line endings so the repo is identical regardless of the platform
+# it was committed from. Without this, a Windows checkout stores CRLF and every
+# file shows as modified for contributors on macOS or Linux.
+* text=auto eol=lf
+
+# Binary — never touch these
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.woff  binary
+*.woff2 binary
+*.db    binary
+
+# Keep generated lockfiles out of diff review noise
+package-lock.json -diff linguist-generated
+
+# Language detection: this is a web project, not a "SQL" one
+*.sql linguist-detectable=false

@@ -1,0 +1,184 @@
+<main>
+
+  <div class="page-head">
+    <div class="wrap">
+      <span class="eyebrow">Exposure management</span>
+      <h1>Patch what actually matters first</h1>
+      <p class="lead mt-1">
+        Continuous discovery across internal, external and cloud surfaces, ranked by real
+        exploitability — EPSS, known-exploited status and blast radius in your environment —
+        rather than raw CVSS.
+      </p>
+    </div>
+  </div>
+
+  <!-- ========================================================== SUMMARY -->
+  <section style="padding:1.5rem 0 0">
+    <div class="wrap">
+      <div class="grid g4">
+        <div class="stat">
+          <div class="stat-label">Open findings</div>
+          <div class="stat-value" data-exp="open">—</div>
+          <div class="stat-sub" data-exp="openSub">across the estate</div>
+        </div>
+        <div class="stat is-crit">
+          <div class="stat-label">Actively exploited</div>
+          <div class="stat-value" style="color:var(--crit)" data-exp="kev">—</div>
+          <div class="stat-sub">on the KEV list</div>
+        </div>
+        <div class="stat is-high">
+          <div class="stat-label">Past due</div>
+          <div class="stat-value" style="color:var(--high)" data-exp="overdue">—</div>
+          <div class="stat-sub">outside the remediation window</div>
+        </div>
+        <div class="stat is-info">
+          <div class="stat-label">Internet-facing</div>
+          <div class="stat-value" style="color:var(--accent-2)" data-exp="external">—</div>
+          <div class="stat-sub">reachable without a foothold</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================== COMPARISON -->
+  <section style="padding:1.5rem 0 0">
+    <div class="wrap">
+      <div class="panel reveal">
+        <div class="panel-head">
+          <span class="panel-title">Why this order, and not CVSS</span>
+          <span class="badge mono" id="ranking-diff">—</span>
+        </div>
+        <div class="panel-body">
+          <p class="text-muted" style="font-size:.88rem">
+            CVSS says how bad exploitation would be. It says nothing about whether anyone is
+            doing it. Both orderings are shown here so the difference can be checked rather
+            than taken on trust.
+          </p>
+
+          <div class="grid g2 mt-3" style="gap:1.25rem">
+            <div>
+              <h4 class="text-accent">Ranked by exposure</h4>
+              <div class="table-scroll mt-1">
+                <table class="data" style="min-width:0">
+                  <thead><tr><th>#</th><th>CVE</th><th>Asset</th><th>Score</th><th>CVSS</th></tr></thead>
+                  <tbody id="rank-exposure">
+                    <tr><td colspan="5" class="empty">Loading…</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <div>
+              <h4 style="color:var(--muted)">Ranked by raw CVSS</h4>
+              <div class="table-scroll mt-1">
+                <table class="data" style="min-width:0">
+                  <thead><tr><th>#</th><th>CVE</th><th>Asset</th><th>Score</th><th>CVSS</th></tr></thead>
+                  <tbody id="rank-cvss">
+                    <tr><td colspan="5" class="empty">Loading…</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="notice mt-3" id="ranking-explanation"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ QUEUE -->
+  <section style="padding:1.5rem 0">
+    <div class="wrap">
+      <div class="panel">
+        <div class="panel-head">
+          <span class="panel-title">Remediation queue</span>
+          <div class="filters">
+            <select class="select" id="exp-status" aria-label="Filter by status">
+              <option value="open">Open</option>
+              <option value="remediating">Remediating</option>
+              <option value="accepted">Risk accepted</option>
+              <option value="resolved">Resolved</option>
+              <option value="all">All</option>
+            </select>
+            <select class="select" id="exp-surface" aria-label="Filter by surface">
+              <option value="">All surfaces</option>
+              <option value="external">External</option>
+              <option value="cloud">Cloud</option>
+              <option value="internal">Internal</option>
+            </select>
+            <button class="btn btn-ghost btn-sm" type="button" id="exp-scan" hidden>Run discovery</button>
+          </div>
+        </div>
+
+        <div class="panel-body flush">
+          <div class="table-scroll">
+            <table class="data">
+              <thead>
+                <tr>
+                  <th>Exposure</th><th>CVE</th><th>Asset</th><th>Surface</th>
+                  <th>EPSS</th><th>CVSS</th><th>Blast radius</th><th>Due</th><th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="exp-rows">
+                <tr><td colspan="9" class="empty">Loading findings…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="pager">
+          <span id="exp-count">—</span>
+          <span>Click a finding for its score breakdown</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ SCANS -->
+  <section style="padding:0 0 2rem">
+    <div class="wrap">
+      <div class="grid g2" style="gap:1.25rem">
+        <div class="panel">
+          <div class="panel-head"><span class="panel-title">How the score is built</span></div>
+          <div class="panel-body">
+            <div class="table-scroll">
+              <table class="data" style="min-width:0">
+                <thead><tr><th>Factor</th><th>Max</th><th>Why</th></tr></thead>
+                <tbody>
+                  <tr><td class="strong">EPSS</td><td class="mono">40</td><td>Modelled probability of exploitation within 30 days.</td></tr>
+                  <tr><td class="strong">Known exploited</td><td class="mono">25</td><td>Not a probability — an observation that it is happening now.</td></tr>
+                  <tr><td class="strong">Blast radius</td><td class="mono">20</td><td>How much of your estate, weighted by asset criticality.</td></tr>
+                  <tr><td class="strong">Reachability</td><td class="mono">10</td><td>Internet-facing, cloud, or internal-only.</td></tr>
+                  <tr><td class="strong">CVSS</td><td class="mono">5</td><td>Impact if exploited. Deliberately the smallest term.</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="text-muted mt-2" style="font-size:.82rem">
+              Every finding carries the factors that produced its score. A number an engineer
+              cannot argue with is a number they will ignore.
+            </p>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head"><span class="panel-title">Scan history</span></div>
+          <div class="panel-body flush">
+            <div class="table-scroll">
+              <table class="data" style="min-width:0">
+                <thead><tr><th>When</th><th>Kind</th><th>Target</th><th>New</th></tr></thead>
+                <tbody id="exp-scans">
+                  <tr><td colspan="4" class="empty">No scans yet.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="pager">
+            <span>Verification rescans run per finding after remediation</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>

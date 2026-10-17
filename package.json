@@ -1,0 +1,24 @@
+{
+  "name": "vgil-soc",
+  "version": "2.0.0",
+  "private": true,
+  "description": "VGIL \u2014 Security Operations & Threat Monitoring platform (frontend + SQLite-backed API)",
+  "main": "server/server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node --disable-warning=ExperimentalWarning server/server.js",
+    "dev": "node --disable-warning=ExperimentalWarning --watch server/server.js",
+    "seed": "node --disable-warning=ExperimentalWarning server/lib/seed.js --force",
+    "test": "node --disable-warning=ExperimentalWarning --test",
+    "migrate": "node --disable-warning=ExperimentalWarning -e \"const d=require('./server/db');d.open();console.log('schema v'+require('./server/db/migrate').currentVersion(d.handle()));d.close()\"",
+    "vendor": "node tools/vendor.js",
+    "postinstall": "node tools/vendor.js"
+  },
+  "engines": {
+    "node": ">=22.5"
+  },
+  "dependencies": {
+    "cobe": "^2.0.1",
+    "express": "^4.21.2"
+  }
+}

@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Threat Research — VGIL</title>
+<meta name="description" content="Detection engineering notes and threat research from the VGIL security operations centre: attacker tradecraft, detection logic, and what actually fires in production.">
+<meta name="theme-color" content="#05080d">
+<link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+<script src="/assets/js/theme.js"></script>
+<!-- seo:begin -->
+<link rel="canonical" href="https://vgil.io/research.html">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="VGIL">
+<meta property="og:title" content="Threat Research — VGIL">
+<meta property="og:description" content="Detection engineering notes and threat research from the VGIL security operations centre: attacker tradecraft, detection logic, and what actually fires in production.">
+<meta property="og:url" content="https://vgil.io/research.html">
+<meta property="og:image" content="https://vgil.io/assets/img/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="VGIL — security operations and threat monitoring">
+<meta property="og:locale" content="en_GB">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Threat Research — VGIL">
+<meta name="twitter:description" content="Detection engineering notes and threat research from the VGIL security operations centre: attacker tradecraft, detection logic, and what actually fires in production.">
+<meta name="twitter:image" content="https://vgil.io/assets/img/og-card.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "VGIL",
+      "item": "https://vgil.io/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Threat Research — VGIL",
+      "item": "https://vgil.io/research.html"
+    }
+  ]
+}
+</script>
+<!-- seo:end -->
+<link rel="stylesheet" href="/assets/css/style.css">
+<noscript><style>.reveal{opacity:1;transform:none}</style></noscript>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap topbar-inner">
+    <div class="topbar-status"><span class="pulse"></span> SOC STATUS: OPERATIONAL</div>
+    <div class="topbar-feed"><span class="mono" data-ticker>establishing threat feed…</span></div>
+  </div>
+</div>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="/index.html" aria-label="VGIL home">
+      <svg class="brand-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <path d="M16 2.5 4.5 7v9c0 7.1 4.8 11.8 11.5 13.8C22.7 27.8 27.5 23.1 27.5 16V7L16 2.5Z" stroke="url(#bm)" stroke-width="1.7" fill="rgba(0,240,168,.07)"/>
+        <circle cx="16" cy="15.5" r="2" fill="#00f0a8"/>
+        <path class="radar-arc" d="M16 9.5a6 6 0 0 1 6 6" stroke="#38ccff" stroke-width="1.6" stroke-linecap="round"/>
+        <path class="radar-arc" d="M16 12.5a3 3 0 0 1 3 3" stroke="#38ccff" stroke-width="1.6" stroke-linecap="round" opacity=".65"/>
+        <defs><linearGradient id="bm" x1="4" y1="2" x2="28" y2="30"><stop stop-color="#00f0a8"/><stop offset="1" stop-color="#38ccff"/></linearGradient></defs>
+      </svg>
+      <span><span class="brand-text">VGIL</span><small>THREAT MONITORING</small></span>
+    </a>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+
+    <ul class="nav-links">
+      <li><a href="/services.html">Services</a></li>
+      <li><a href="/platform.html">Platform</a></li>
+      <li><a href="/threat-intel.html">Threat Intel</a></li>
+      <li><a href="/dashboard.html">Live SOC</a></li>
+      <li><a href="/incidents.html">Incidents</a></li>
+      <li><a href="/pricing.html">Pricing</a></li>
+      <li><a href="/about.html">About</a></li>
+      <li><a href="/contact.html">Contact</a></li>
+    </ul>
+
+    <div class="nav-actions" data-auth-slot>
+      <button class="palette-trigger" type="button" data-palette-open aria-label="Open the command palette">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5" stroke-linecap="round"/></svg>
+        <span>Search</span><kbd>Ctrl K</kbd>
+      </button>
+      <button class="theme-toggle" type="button" aria-label="Switch between light and dark theme" title="Switch theme">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+      <a class="btn btn-ghost btn-sm" href="/login.html">Sign in</a>
+      <a class="btn btn-primary btn-sm" href="/contact.html">Book a demo</a>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <div class="page-head">
+    <div class="wrap">
+      <span class="eyebrow">Research</span>
+      <h1>Detection engineering notes</h1>
+      <p class="lead mt-1">
+        What our analysts are seeing, and the detection logic we wrote in response. Every note
+        here comes out of production work — the false positive rates are measured, not
+        estimated, and we say when something did not work.
+      </p>
+    </div>
+  </div>
+
+  <!-- ========================================================== ARTICLE 1 -->
+  <section>
+    <div class="wrap">
+      <article class="panel reveal" id="beaconing-jitter">
+        <div class="panel-head">
+          <span class="panel-title">Catching beacons that jitter</span>
+          <span class="badge is-info">Detection engineering</span>
+        </div>
+        <div class="panel-body">
+          <p class="text-muted mono" style="font-size:.8rem">
+            14 August 2026 · Detection Engineering · T1071.001, T1573
+          </p>
+
+          <p class="lead mt-2">
+            Command-and-control beacons used to be easy: a callback every 60 seconds, forever.
+            Modern frameworks randomise the interval, and a naive "same destination N times an
+            hour" rule either misses them or drowns you in software updaters.
+          </p>
+
+          <h4 class="text-accent mt-3">What actually separates them</h4>
+          <p class="text-muted mt-1">
+            Legitimate periodic traffic and a jittered beacon both repeat. The difference is in
+            the shape of the distribution. We score the coefficient of variation — standard
+            deviation over mean — across the gaps between connections to the same destination.
+            Human-driven traffic is bursty and irregular, with a coefficient well above 1. A
+            beacon with 20% jitter sits near 0.12. An unjittered beacon sits near 0.
+          </p>
+          <p class="text-muted mt-1">
+            The trap is that software updaters, telemetry agents and NTP also sit in that low
+            band. Interval regularity alone produces an alert queue full of your own monitoring
+            stack. So regularity is necessary but not sufficient: it fires only alongside a
+            second independent indicator — a destination with no reverse DNS, a process that is
+            not a known updater, an ASN the estate has never talked to before, or a payload size
+            distribution with almost no variance.
+          </p>
+
+          <div class="notice mt-3">
+            <strong>Result in production:</strong> across 210 estates over 90 days, the rule
+            fired 47 times with 41 confirmed true positives. The six false positives were all
+            the same cause — a customer's bespoke inventory agent polling on a fixed schedule
+            from a host with no reverse DNS. We now allow-list on process signature rather than
+            destination, because the destination changed weekly and the binary did not.
+          </div>
+
+          <h4 class="text-accent mt-3">What we got wrong first</h4>
+          <p class="text-muted mt-1">
+            The first version keyed on destination IP. Every cloud-hosted C2 rotated addresses
+            faster than the rule could learn them, and the allow-list we built to suppress false
+            positives suppressed real beacons too. Keying on the (process, ASN) pair instead cut
+            the false positive rate by roughly four-fifths and survived address rotation.
+          </p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ========================================================== ARTICLE 2 -->
+  <section class="alt">
+    <div class="wrap">
+      <article class="panel reveal" id="aitm-phishing">
+        <div class="panel-head">
+          <span class="panel-title">Adversary-in-the-middle phishing defeats most MFA</span>
+          <span class="badge is-crit">Threat intelligence</span>
+        </div>
+        <div class="panel-body">
+          <p class="text-muted mono" style="font-size:.8rem">
+            2 August 2026 · Threat Intelligence · T1557, T1539
+          </p>
+
+          <p class="lead mt-2">
+            A reverse-proxy phishing kit does not need your password or your one-time code. It
+            relays both to the real site in real time, and steals the session cookie the site
+            issues afterwards. The victim signs in successfully, sees the real application, and
+            notices nothing.
+          </p>
+
+          <h4 class="text-accent mt-3">Why the second factor did not help</h4>
+          <p class="text-muted mt-1">
+            TOTP, push approval and SMS all authenticate a moment, not a channel. If the
+            attacker is sitting in the middle of that moment, they inherit its result. The
+            factor was not bypassed — it was proxied.
+          </p>
+          <p class="text-muted mt-1">
+            The controls that do break this are the ones bound to the origin. WebAuthn and
+            passkeys sign a challenge that includes the relying party identifier, so a signature
+            produced for <span class="mono">login.example.com</span> is worthless to a proxy on
+            <span class="mono">login-example.security-check.app</span>. Certificate-bound
+            sessions and device compliance checks work for the same reason: they attest to
+            something the proxy cannot forward.
+          </p>
+
+          <h4 class="text-accent mt-3">Detecting it when you cannot prevent it</h4>
+          <p class="text-muted mt-1">
+            Most estates cannot move every application to WebAuthn this quarter. In the
+            meantime, the tells are on the session, not the login:
+          </p>
+          <ul class="list mt-2">
+            <li>A session cookie first seen from one address and used minutes later from a different ASN or country.</li>
+            <li>Sign-in from a residential proxy range immediately followed by mailbox rule creation — the standard next step is a rule that hides the replies.</li>
+            <li>User agent for the authentication and for the subsequent API calls that do not match.</li>
+            <li>A newly registered domain, resolved from inside the estate, whose name embeds the brand of your identity provider.</li>
+          </ul>
+
+          <div class="notice notice-warn mt-3">
+            <strong>Note on our own guidance:</strong> VGIL offers TOTP as a second factor,
+            which is subject to exactly this weakness. We say so rather than implying otherwise.
+            It is a large improvement over a password alone and a poor defence against a
+            determined proxy — WebAuthn support is the next thing on our roadmap for this
+            reason.
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ========================================================== ARTICLE 3 -->
+  <section>
+    <div class="wrap">
+      <article class="panel reveal" id="csv-injection">
+        <div class="panel-body">
+          <p class="text-muted mono" style="font-size:.8rem">
+            21 July 2026 · Detection Engineering · T1059
+          </p>
+          <h3>The export button is part of your attack surface</h3>
+
+          <p class="lead mt-2">
+            An analyst's most common action on a suspicious alert is to export it. If your export
+            writes attacker-controlled text into a CSV without escaping, that is a code execution
+            path from an alert straight onto the analyst's workstation.
+          </p>
+          <p class="text-muted mt-2">
+            Spreadsheets interpret a cell beginning <code class="mono">=</code>,
+            <code class="mono">+</code>, <code class="mono">-</code> or <code class="mono">@</code>
+            as a formula. Alert fields are full of attacker-influenced strings: usernames,
+            hostnames, command lines, indicator values. An attacker who can get a string into a
+            failed-login event can get a formula into your export.
+          </p>
+          <p class="text-muted mt-2">
+            The fix is one line and belongs in the serialiser, not in each call site: prefix any
+            cell starting with those characters — plus tab and carriage return, which parsers
+            treat as leading whitespace before re-examining the next character — with a single
+            apostrophe. The spreadsheet consumes it as a "treat as text" marker and shows the
+            original string.
+          </p>
+
+          <div class="notice mt-3">
+            This is why VGIL's own CSV export defuses those prefixes, and why there is a test
+            asserting it. A control nobody tests is a control nobody has.
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ========================================================== ARTICLE 4 -->
+  <section class="alt">
+    <div class="wrap">
+      <article class="panel reveal" id="alert-fatigue">
+        <div class="panel-body">
+          <p class="text-muted mono" style="font-size:.8rem">
+            9 July 2026 · Operations
+          </p>
+          <h3>De-duplication is a detection control, not a UI feature</h3>
+
+          <p class="lead mt-2">
+            A brute-force rule that opens a new alert per failed login produces four hundred rows
+            for one attack. The queue is now unreadable, and the genuinely different alert that
+            arrives during the flood is invisible.
+          </p>
+          <p class="text-muted mt-2">
+            The instinct is to fix this at the interface — collapse similar rows, add a filter.
+            That is treating the symptom. The right place is at write time: derive a stable key
+            from the properties that make an occurrence <em>the same incident</em> — rule,
+            source, target account — and increment a counter on a match instead of inserting.
+          </p>
+          <p class="text-muted mt-2">
+            The subtlety is what belongs in that key. Include too much and every retry looks
+            novel again. Include too little and two genuinely separate attacks merge into one, so
+            the second one is never triaged. We key on rule, source address and targeted
+            username: the same attacker retrying is one incident with a rising count, while the
+            same attacker pivoting to a second account is a new one, because that pivot is
+            exactly the escalation an analyst needs to see.
+          </p>
+        </div>
+      </article>
+
+      <div class="section-head center-narrow mt-4 reveal">
+        <p class="text-muted">
+          Notes are published as the work happens rather than on a schedule. For indicators and
+          tracked actors, see <a href="/threat-intel.html">threat intelligence</a>.
+        </p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="/index.html">
+          <svg class="brand-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <path d="M16 2.5 4.5 7v9c0 7.1 4.8 11.8 11.5 13.8C22.7 27.8 27.5 23.1 27.5 16V7L16 2.5Z" stroke="#00f0a8" stroke-width="1.7" fill="rgba(0,240,168,.07)"/>
+            <circle cx="16" cy="15.5" r="2" fill="#00f0a8"/>
+            <path class="radar-arc" d="M16 9.5a6 6 0 0 1 6 6" stroke="#38ccff" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+          <span><span class="brand-text">VGIL</span><small>THREAT MONITORING</small></span>
+        </a>
+        <p class="footer-note">
+          Security operations and threat monitoring for organisations that cannot afford to be the
+          last to know. Detection, response and intelligence in one operation.
+        </p>
+        <p class="footer-note" style="color:var(--dim);opacity:.8">
+          VGIL is a demonstration project. The company, customers, incidents and threat data shown
+          here are fictional and generated for illustration.
+        </p>
+      </div>
+      <div>
+        <h5>Platform</h5>
+        <ul>
+          <li><a href="/platform.html">How it works</a></li>
+          <li><a href="/dashboard.html">Live SOC console</a></li>
+          <li><a href="/incidents.html">Incident management</a></li>
+          <li><a href="/threat-intel.html">Threat intelligence</a></li>
+          <li><a href="/threat-intel.html#lookup">Indicator lookup</a></li>
+          <li><a href="/exposure.html">Exposure management</a></li>
+          <li><a href="/api-docs.html">API reference</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Services</h5>
+        <ul>
+          <li><a href="/services.html#soc">24/7 SOC</a></li>
+          <li><a href="/services.html#mdr">Managed detection &amp; response</a></li>
+          <li><a href="/services.html#ir">Incident response</a></li>
+          <li><a href="/services.html#vuln">Vulnerability management</a></li>
+          <li><a href="/services.html#compliance">Compliance</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Company</h5>
+        <ul>
+          <li><a href="/about.html">About VGIL</a></li>
+          <li><a href="/research.html">Threat research</a></li>
+          <li><a href="/compliance.html">Trust &amp; compliance</a></li>
+          <li><a href="/pricing.html">Pricing</a></li>
+          <li><a href="/contact.html">Contact</a></li>
+          <li><a href="/login.html">Sign in</a></li>
+          <li><a href="/signup.html">Create account</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span data-year>2026</span> VGIL Security Operations — demonstration project.</span>
+      <span class="mono">Incident desk: +1 (555) 0199-SOC · soc@vgil.io</span>
+    </div>
+  </div>
+</footer>
+
+<div class="toasts"></div>
+
+<script src="/assets/js/api.js"></script>
+<script src="/assets/js/main.js"></script>
+<script src="/assets/js/palette.js"></script>
+<script src="/assets/js/effects.js"></script>
+</body>
+</html>

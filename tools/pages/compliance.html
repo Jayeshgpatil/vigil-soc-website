@@ -1,0 +1,223 @@
+<main>
+
+  <div class="page-head">
+    <div class="wrap">
+      <span class="eyebrow">Trust</span>
+      <h1>Compliance and data handling</h1>
+      <p class="lead mt-1">
+        A security vendor asking for access to your estate owes you specifics. This page states
+        what we hold, where it lives, who can reach it, and what we commit to — including the
+        parts that are still in progress.
+      </p>
+    </div>
+  </div>
+
+  <!-- ==================================================== CERTIFICATIONS -->
+  <section>
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Certifications</span>
+        <h2>Where we stand</h2>
+        <p class="lead mt-1">
+          Status is stated plainly. An audit in progress is described as in progress, because a
+          logo on a website is not the same as a report you can read.
+        </p>
+      </div>
+
+      <div class="grid g2 mt-3">
+        <div class="panel reveal">
+          <div class="panel-head">
+            <span class="panel-title">SOC 2 Type II</span>
+            <span class="badge is-ok">Certified</span>
+          </div>
+          <div class="panel-body">
+            <p class="text-muted">
+              Annual audit covering security, availability and confidentiality. The current
+              report and bridge letter are available to customers and prospects under NDA —
+              request them through the contact form.
+            </p>
+          </div>
+        </div>
+
+        <div class="panel reveal" data-delay="80">
+          <div class="panel-head">
+            <span class="panel-title">ISO/IEC 27001:2022</span>
+            <span class="badge is-ok">Certified</span>
+          </div>
+          <div class="panel-body">
+            <p class="text-muted">
+              Information security management system covering the SOC platform, the analyst
+              operation and supporting corporate systems. Statement of Applicability available
+              on request.
+            </p>
+          </div>
+        </div>
+
+        <div class="panel reveal" data-delay="160">
+          <div class="panel-head">
+            <span class="panel-title">ISO/IEC 27017 &amp; 27018</span>
+            <span class="badge is-high">In progress</span>
+          </div>
+          <div class="panel-body">
+            <p class="text-muted">
+              Cloud-specific controls and personal data in cloud processing. Gap assessment
+              complete; certification audit scheduled. We will publish the date it completes,
+              not before.
+            </p>
+          </div>
+        </div>
+
+        <div class="panel reveal" data-delay="240">
+          <div class="panel-head">
+            <span class="panel-title">Cyber Essentials Plus</span>
+            <span class="badge is-ok">Certified</span>
+          </div>
+          <div class="panel-body">
+            <p class="text-muted">
+              UK government-backed scheme with hands-on technical verification, renewed
+              annually. Required by most UK public sector procurement.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================== DATA HANDLING -->
+  <section class="alt">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Data</span>
+        <h2>What we collect, and what we do not</h2>
+      </div>
+
+      <div class="grid g2 mt-3">
+        <div class="panel reveal">
+          <div class="panel-head"><span class="panel-title">Collected</span></div>
+          <div class="panel-body">
+            <ul class="list">
+              <li>Security telemetry: process execution, network connections, authentication events, file integrity changes.</li>
+              <li>Asset inventory: hostnames, addresses, operating system, agent version, owner.</li>
+              <li>Detection output: alerts, risk scores, the evidence behind each score.</li>
+              <li>Console activity: who viewed, assigned, escalated or exported what, and when.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="panel reveal" data-delay="120">
+          <div class="panel-head"><span class="panel-title">Never collected</span></div>
+          <div class="panel-body">
+            <ul class="list">
+              <li>Passwords or credential material from monitored endpoints.</li>
+              <li>Keystrokes, screenshots, webcam or microphone input.</li>
+              <li>Document contents, mailbox contents or personal files.</li>
+              <li>Browsing history unrelated to a detection.</li>
+            </ul>
+            <p class="text-muted mt-2" style="font-size:.85rem">
+              Monitoring is read-only. The agent does not disable host security controls or
+              modify system security settings.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel mt-3 reveal">
+        <div class="panel-head"><span class="panel-title">Handling</span></div>
+        <div class="panel-body table-scroll">
+          <table class="data">
+            <tbody>
+              <tr><td><strong>Encryption in transit</strong></td><td>TLS 1.3, HSTS with preload. Agent connections pin the service certificate.</td></tr>
+              <tr><td><strong>Encryption at rest</strong></td><td>AES-256 on all storage volumes and backups.</td></tr>
+              <tr><td><strong>Credential storage</strong></td><td>Passwords: scrypt with per-user salts. API keys, reset tokens and recovery codes: SHA-256, never reversible. No credential can be displayed again after issue.</td></tr>
+              <tr><td><strong>Telemetry retention</strong></td><td>Raw events 30 days, alerts and incidents 13 months, audit log 7 years. Longer terms available by contract.</td></tr>
+              <tr><td><strong>Data residency</strong></td><td>UK and EU regions. Data does not leave the region you select, including for backup.</td></tr>
+              <tr><td><strong>Tenant isolation</strong></td><td>Ownership is applied as a query filter rather than a post-fetch check, so there is no code path where a missing check exposes another tenant's data.</td></tr>
+              <tr><td><strong>Deletion</strong></td><td>On termination, telemetry is destroyed within 30 days and backups age out within 90. A certificate of destruction is issued on request.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================================================== SUBPROCESSORS -->
+  <section>
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Supply chain</span>
+        <h2>Sub-processors</h2>
+        <p class="lead mt-1">
+          Customers are notified 30 days before a new sub-processor handles their data, with a
+          right to object.
+        </p>
+      </div>
+
+      <div class="panel mt-3 reveal">
+        <div class="panel-body table-scroll">
+          <table class="data">
+            <thead><tr><th>Provider</th><th>Purpose</th><th>Region</th><th>Data</th></tr></thead>
+            <tbody>
+              <tr><td>Primary cloud provider</td><td>Platform hosting and storage</td><td>UK South, EU West</td><td>Telemetry, alerts, incidents</td></tr>
+              <tr><td>Managed database</td><td>Persistence and backup</td><td>Same region as tenant</td><td>All structured data</td></tr>
+              <tr><td>Transactional email</td><td>Alert notifications</td><td>EU</td><td>Recipient address, alert summary</td></tr>
+              <tr><td>Error monitoring</td><td>Platform reliability</td><td>EU</td><td>Stack traces, request identifiers — no telemetry content</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================================================== GDPR & CONTACT -->
+  <section class="alt">
+    <div class="wrap">
+      <div class="grid g2">
+        <div class="reveal">
+          <h2>GDPR and UK GDPR</h2>
+          <p class="lead mt-1">
+            VGIL acts as a processor for customer telemetry and as a controller for our own
+            account records.
+          </p>
+          <ul class="list mt-2">
+            <li>A Data Processing Addendum with the Standard Contractual Clauses is available and forms part of every contract.</li>
+            <li>A Data Protection Impact Assessment template for deploying endpoint monitoring is provided during onboarding.</li>
+            <li>Subject access, rectification and erasure requests are actioned within 30 days.</li>
+            <li>Breach notification to affected customers within 72 hours of confirmation, with the facts we have at the time rather than a holding statement.</li>
+          </ul>
+        </div>
+
+        <div class="reveal" data-delay="120">
+          <h2>Availability</h2>
+          <p class="lead mt-1">
+            Commitments that carry service credits, not aspirations.
+          </p>
+          <div class="grid g2 mt-2">
+            <div class="stat"><div class="stat-label">Platform uptime</div><div class="stat-value" data-nocount>99.95%</div></div>
+            <div class="stat is-info"><div class="stat-label">Critical triage</div><div class="stat-value" style="color:var(--accent-2)" data-nocount>&lt; 15 min</div></div>
+            <div class="stat is-high"><div class="stat-label">P1 response</div><div class="stat-value" style="color:var(--high)" data-nocount>&lt; 30 min</div></div>
+            <div class="stat"><div class="stat-label">Recovery point</div><div class="stat-value" data-nocount>&lt; 5 min</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel mt-3 reveal">
+        <div class="panel-head"><span class="panel-title">Reporting a vulnerability</span></div>
+        <div class="panel-body">
+          <p class="text-muted">
+            If you have found a security issue in this service, tell us at
+            <span class="mono">security@vgil.io</span>. We acknowledge within one business day
+            and will keep you updated until it is resolved.
+          </p>
+          <p class="text-muted mt-2">
+            Please do not run automated scanners against production, access or modify data that
+            is not yours, or degrade service for other users. Testing that stays within those
+            bounds will not result in legal action from us. Our machine-readable policy is at
+            <a href="/.well-known/security.txt" class="mono">/.well-known/security.txt</a>
+            (RFC 9116).
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
