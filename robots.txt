@@ -1,0 +1,18 @@
+# VGIL — https://vgil.io
+#
+# The console, account and authentication pages are behind a session and have
+# nothing to offer a crawler, so they are disallowed here as well as carrying
+# a noindex tag. The API is disallowed outright.
+
+User-agent: *
+Allow: /
+Disallow: /dashboard.html
+Disallow: /incidents.html
+Disallow: /account.html
+Disallow: /admin.html
+Disallow: /login.html
+Disallow: /signup.html
+Disallow: /reset.html
+Disallow: /api/
+
+Sitemap: https://vgil.io/sitemap.xml

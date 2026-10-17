@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Account &mdash; VGIL</title>
+<meta name="description" content="Manage your VGIL profile, password and active sessions.">
+<meta name="theme-color" content="#05080d">
+<link rel="icon" href="/vigil-soc-website/assets/img/favicon.svg" type="image/svg+xml">
+<!-- seo:begin -->
+<link rel="canonical" href="https://vgil.io/account.html">
+<meta name="robots" content="noindex, nofollow, noarchive">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="VGIL">
+<meta property="og:title" content="Account — VGIL">
+<meta property="og:description" content="Manage your VGIL profile, password and active sessions.">
+<meta property="og:url" content="https://vgil.io/account.html">
+<meta property="og:image" content="https://vgil.io/assets/img/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="VGIL — security operations and threat monitoring">
+<meta property="og:locale" content="en_GB">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Account — VGIL">
+<meta name="twitter:description" content="Manage your VGIL profile, password and active sessions.">
+<meta name="twitter:image" content="https://vgil.io/assets/img/og-card.png">
+<!-- seo:end -->
+<script src="/vigil-soc-website/assets/js/theme.js"></script>
+<link rel="stylesheet" href="/vigil-soc-website/assets/css/style.css">
+<noscript><style>.reveal{opacity:1;transform:none}</style></noscript>
+</head>
+<body data-requires-auth>
+
+<div class="topbar">
+  <div class="wrap topbar-inner">
+    <div class="topbar-status"><span class="pulse"></span> SOC STATUS: OPERATIONAL</div>
+    <div class="topbar-feed"><span class="mono" data-ticker>establishing threat feed…</span></div>
+  </div>
+</div>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="/vigil-soc-website/index.html" aria-label="VGIL home">
+      <svg class="brand-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <path d="M16 2.5 4.5 7v9c0 7.1 4.8 11.8 11.5 13.8C22.7 27.8 27.5 23.1 27.5 16V7L16 2.5Z" stroke="url(#bm)" stroke-width="1.7" fill="rgba(0,240,168,.07)"/>
+        <circle cx="16" cy="15.5" r="2" fill="#00f0a8"/>
+        <path class="radar-arc" d="M16 9.5a6 6 0 0 1 6 6" stroke="#38ccff" stroke-width="1.6" stroke-linecap="round"/>
+        <path class="radar-arc" d="M16 12.5a3 3 0 0 1 3 3" stroke="#38ccff" stroke-width="1.6" stroke-linecap="round" opacity=".65"/>
+        <defs><linearGradient id="bm" x1="4" y1="2" x2="28" y2="30"><stop stop-color="#00f0a8"/><stop offset="1" stop-color="#38ccff"/></linearGradient></defs>
+      </svg>
+      <span><span class="brand-text">VGIL</span><small>THREAT MONITORING</small></span>
+    </a>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+
+    <ul class="nav-links">
+      <li><a href="/vigil-soc-website/services.html">Services</a></li>
+      <li><a href="/vigil-soc-website/platform.html">Platform</a></li>
+      <li><a href="/vigil-soc-website/threat-intel.html">Threat Intel</a></li>
+      <li><a href="/vigil-soc-website/dashboard.html">Live SOC</a></li>
+      <li><a href="/vigil-soc-website/incidents.html">Incidents</a></li>
+      <li><a href="/vigil-soc-website/pricing.html">Pricing</a></li>
+      <li><a href="/vigil-soc-website/about.html">About</a></li>
+      <li><a href="/vigil-soc-website/contact.html">Contact</a></li>
+    </ul>
+
+    <div class="nav-actions" data-auth-slot>
+      <button class="palette-trigger" type="button" data-palette-open aria-label="Open the command palette">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5" stroke-linecap="round"/></svg>
+        <span>Search</span><kbd>Ctrl K</kbd>
+      </button>
+      <button class="theme-toggle" type="button" aria-label="Switch between light and dark theme" title="Switch theme">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+      <a class="btn btn-ghost btn-sm" href="/vigil-soc-website/login.html">Sign in</a>
+      <a class="btn btn-primary btn-sm" href="/vigil-soc-website/contact.html">Book a demo</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="page-head">
+    <div class="wrap">
+      <span class="eyebrow">Account</span>
+      <h1 style="font-size:clamp(1.7rem,3.4vw,2.4rem)">Your account</h1>
+      <p class="lead mt-1" style="font-size:1rem">
+        Profile, password, and every device this login is currently active on.
+      </p>
+    </div>
+  </div>
+
+  <section style="padding:2rem 0 3rem">
+    <div class="wrap">
+      <div class="grid g-lean" style="gap:1.5rem;align-items:start">
+
+        <div>
+          <div class="panel">
+            <div class="panel-head">
+              <span class="panel-title">Profile</span>
+              <span class="badge mono" data-role-badge>&mdash;</span>
+            </div>
+            <div class="panel-body">
+              <form id="profile-form" novalidate>
+                <div class="notice notice-ok mb-2" data-notice hidden></div>
+
+                <div class="grid g2" style="gap:0 1rem">
+                  <div class="field">
+                    <label for="name">Full name</label>
+                    <input class="input" type="text" id="name" name="name" autocomplete="name">
+                    <div class="err" data-err="name"></div>
+                  </div>
+                  <div class="field">
+                    <label for="title">Job title</label>
+                    <input class="input" type="text" id="title" name="title">
+                    <div class="err" data-err="title"></div>
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label for="org">Organisation</label>
+                  <input class="input" type="text" id="org" name="org" autocomplete="organization">
+                  <div class="err" data-err="org"></div>
+                </div>
+
+                <div class="field">
+                  <label for="email-ro">Email</label>
+                  <input class="input mono" type="text" id="email-ro" disabled>
+                  <div class="hint">Your sign-in address cannot be changed here.</div>
+                </div>
+
+                <button class="btn btn-primary" type="submit">Save profile</button>
+              </form>
+            </div>
+          </div>
+
+          <div class="panel mt-2">
+            <div class="panel-head"><span class="panel-title">Change password</span></div>
+            <div class="panel-body">
+              <form id="password-form" novalidate>
+                <div class="notice notice-ok mb-2" data-pw-notice hidden></div>
+
+                <div class="field">
+                  <label for="currentPassword">Current password</label>
+                  <input class="input mono" type="password" id="currentPassword"
+                         name="currentPassword" autocomplete="current-password" required>
+                  <div class="err" data-err="currentPassword"></div>
+                </div>
+
+                <div class="field">
+                  <label for="newPassword">New password</label>
+                  <input class="input mono" type="password" id="newPassword"
+                         name="newPassword" autocomplete="new-password" required>
+                  <div class="strength" id="pw-strength" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+                  <div class="hint" id="pw-hint">
+                    Minimum 10 characters with upper and lower case, a number and a symbol.
+                  </div>
+                  <div class="err" data-err="newPassword"></div>
+                </div>
+
+                <button class="btn btn-primary" type="submit">Update password</button>
+                <p class="form-note">
+                  Changing your password signs you out of every other device. This one stays
+                  signed in.
+                </p>
+              </form>
+            </div>
+          </div>
+
+          <div class="panel mt-3" id="notifications">
+            <div class="panel-head">
+              <span class="panel-title">Email alerting</span>
+              <span class="badge mono" id="notify-badge">&mdash;</span>
+            </div>
+            <div class="panel-body">
+              <div class="notice mb-2" id="notify-transport" hidden></div>
+
+              <form id="notify-form" novalidate>
+                <div class="notice notice-err mb-2" data-notice hidden></div>
+
+                <label class="flex gap-sm items-center" style="cursor:pointer">
+                  <input type="checkbox" id="n-enabled" name="emailEnabled">
+                  <span><strong>Email me about detections</strong></span>
+                </label>
+                <p class="text-muted" style="font-size:.82rem;margin:.35rem 0 0 1.6rem">
+                  Off by default. A monitoring product that mails everyone by default only
+                  teaches people to filter it away.
+                </p>
+
+                <div class="grid g2 mt-3" style="gap:1rem">
+                  <div class="field" style="margin:0">
+                    <label for="n-severity">Minimum severity</label>
+                    <select class="select" id="n-severity" name="minSeverity"></select>
+                    <div class="err" data-err="minSeverity"></div>
+                  </div>
+
+                  <div class="field" style="margin:0">
+                    <label for="n-cadence">Delivery</label>
+                    <select class="select" id="n-cadence" name="cadence"></select>
+                    <div class="err" data-err="cadence"></div>
+                  </div>
+                </div>
+
+                <div class="field mt-2">
+                  <label for="n-quiet">Quiet hours (optional)</label>
+                  <input class="input mono" type="text" id="n-quiet" name="quietHours"
+                         placeholder="22:00-07:00" maxlength="11">
+                  <div class="hint">
+                    Notifications are held for the next digest during these hours.
+                    Critical alerts always come through.
+                  </div>
+                  <div class="err" data-err="quietHours"></div>
+                </div>
+
+                <fieldset class="field" style="border:0;padding:0">
+                  <legend class="text-muted" style="font-size:.82rem;padding:0">Tell me about</legend>
+                  <div class="flex gap-sm wrap-flex mt-1">
+                    <label class="flex gap-sm items-center" style="font-size:.85rem;cursor:pointer">
+                      <input type="checkbox" id="n-incident" name="onIncident"> Incidents
+                    </label>
+                    <label class="flex gap-sm items-center" style="font-size:.85rem;cursor:pointer">
+                      <input type="checkbox" id="n-critical" name="onCritical"> Critical alerts
+                    </label>
+                    <label class="flex gap-sm items-center" style="font-size:.85rem;cursor:pointer">
+                      <input type="checkbox" id="n-assignment" name="onAssignment"> Assignments to me
+                    </label>
+                  </div>
+                </fieldset>
+
+                <div class="flex gap-sm wrap-flex mt-2">
+                  <button class="btn btn-primary" type="submit">Save settings</button>
+                  <button class="btn btn-ghost" type="button" id="n-test">Send a test</button>
+                  <button class="btn btn-ghost" type="button" id="n-digest" hidden>
+                    Send queued digest (<span id="n-pending">0</span>)
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <div class="panel-body flush">
+              <div class="table-scroll">
+                <table class="data" style="min-width:0">
+                  <thead><tr><th>Sent</th><th>Subject</th><th>Status</th></tr></thead>
+                  <tbody id="notify-log">
+                    <tr><td colspan="3" class="empty">No messages yet.</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel mt-3" id="security">
+            <div class="panel-head">
+              <span class="panel-title">Two-factor authentication</span>
+              <span class="badge mono" id="mfa-badge">&mdash;</span>
+            </div>
+            <div class="panel-body">
+
+              <!-- State A: not enrolled. -->
+              <div id="mfa-off" hidden>
+                <p class="text-muted">
+                  A password alone is one stolen credential away from an account takeover. Adding
+                  an authenticator app means a leaked password is not enough on its own.
+                </p>
+                <form id="mfa-enrol-form" class="mt-2" novalidate>
+                  <div class="notice notice-err mb-2" data-notice hidden></div>
+                  <div class="field">
+                    <label for="mfa-enrol-password">Confirm your password to continue</label>
+                    <input class="input mono" type="password" id="mfa-enrol-password" name="password"
+                           autocomplete="current-password" placeholder="••••••••••••" required>
+                    <div class="err" data-err="password"></div>
+                  </div>
+                  <button class="btn btn-primary" type="submit">Set up two-factor authentication</button>
+                </form>
+              </div>
+
+              <!-- State B: mid-enrolment. Secret shown, awaiting a code. -->
+              <div id="mfa-setup" hidden>
+                <p class="text-muted">
+                  Add this account to your authenticator app, then enter the code it shows.
+                </p>
+
+                <p class="mt-2"><a class="btn btn-primary btn-sm" id="mfa-deeplink" href="#">Open in authenticator app</a></p>
+
+                <p class="text-muted mt-2" style="font-size:.85rem">
+                  Or add it by hand — the setup key is:
+                </p>
+                <div class="flex gap-sm items-center mt-1 wrap-flex">
+                  <code class="mono" id="mfa-secret" style="font-size:1rem;letter-spacing:.06em">&mdash;</code>
+                  <button class="btn btn-ghost btn-sm" type="button" id="mfa-copy-secret">Copy</button>
+                </div>
+                <p class="text-muted mt-1" style="font-size:.8rem">
+                  Time-based, 6 digits, 30-second period, SHA-1.
+                </p>
+
+                <form id="mfa-confirm-form" class="mt-3" novalidate>
+                  <div class="notice notice-err mb-2" data-notice hidden></div>
+                  <div class="field">
+                    <label for="mfa-confirm-code">Enter the 6-digit code</label>
+                    <input class="input mono" type="text" id="mfa-confirm-code" name="code"
+                           inputmode="numeric" autocomplete="one-time-code" placeholder="000000"
+                           maxlength="6" required>
+                    <div class="err" data-err="code"></div>
+                  </div>
+                  <div class="flex gap-sm wrap-flex">
+                    <button class="btn btn-primary" type="submit">Turn on</button>
+                    <button class="btn btn-ghost" type="button" id="mfa-cancel">Cancel</button>
+                  </div>
+                </form>
+              </div>
+
+              <!-- State C: enrolled. -->
+              <div id="mfa-on" hidden>
+                <p class="text-muted">
+                  Two-factor authentication is on. Sign-in asks for a code from your authenticator
+                  after your password.
+                </p>
+                <p class="text-muted mt-1" style="font-size:.85rem">
+                  Enabled <span class="mono" id="mfa-since">&mdash;</span> ·
+                  <span class="mono" id="mfa-remaining">&mdash;</span> recovery codes left
+                </p>
+
+                <div class="flex gap-sm mt-3 wrap-flex">
+                  <button class="btn btn-ghost btn-sm" type="button" id="mfa-regen">Generate new recovery codes</button>
+                  <button class="btn btn-ghost btn-sm" type="button" id="mfa-disable-show">Turn off</button>
+                </div>
+
+                <form id="mfa-disable-form" class="mt-3" novalidate hidden>
+                  <div class="notice notice-err mb-2" data-notice hidden></div>
+                  <p class="text-muted" style="font-size:.85rem">
+                    Turning this off needs your password <em>and</em> a current code — knowing the
+                    password alone must not be enough to remove the control that protects a known
+                    password.
+                  </p>
+                  <div class="field mt-2">
+                    <label for="mfa-disable-password">Password</label>
+                    <input class="input mono" type="password" id="mfa-disable-password" name="password"
+                           autocomplete="current-password" required>
+                    <div class="err" data-err="password"></div>
+                  </div>
+                  <div class="field">
+                    <label for="mfa-disable-code">Authenticator or recovery code</label>
+                    <input class="input mono" type="text" id="mfa-disable-code" name="code"
+                           inputmode="numeric" autocomplete="one-time-code" placeholder="000000" required>
+                    <div class="err" data-err="code"></div>
+                  </div>
+                  <button class="btn btn-danger btn-sm" type="submit">Turn off two-factor authentication</button>
+                </form>
+              </div>
+
+              <!-- Shown once, after enrolment or regeneration. -->
+              <div id="mfa-codes" class="notice notice-warn mt-3" hidden>
+                <strong>Save these recovery codes now.</strong>
+                <p style="font-size:.85rem;margin:.4rem 0">
+                  Each works once, if you lose your authenticator. They are stored hashed and
+                  cannot be shown again.
+                </p>
+                <ul class="mono" id="mfa-codes-list"
+                    style="columns:2;list-style:none;padding:0;margin:.6rem 0;font-size:.9rem"></ul>
+                <div class="flex gap-sm wrap-flex">
+                  <button class="btn btn-ghost btn-sm" type="button" id="mfa-copy-codes">Copy all</button>
+                  <button class="btn btn-ghost btn-sm" type="button" id="mfa-print-codes">Print</button>
+                  <button class="btn btn-primary btn-sm" type="button" id="mfa-codes-done">I have saved them</button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="panel mt-3" id="api-keys">
+            <div class="panel-head">
+              <span class="panel-title">API keys</span>
+              <span class="badge mono" id="key-count">&mdash;</span>
+            </div>
+            <div class="panel-body flush">
+              <div class="table-scroll">
+                <table class="data" style="min-width:0">
+                  <thead><tr><th>Name</th><th>Key</th><th>Created</th><th>Last used</th><th></th></tr></thead>
+                  <tbody id="key-rows">
+                    <tr><td colspan="5" class="empty">Loading&hellip;</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="panel-body">
+              <div id="key-created" class="notice notice-warn mb-2" hidden>
+                <strong>Copy this key now — it is not shown again.</strong>
+                <div class="flex gap-sm items-center mt-1 wrap-flex">
+                  <code class="mono" id="key-secret" style="word-break:break-all">&mdash;</code>
+                  <button class="btn btn-ghost btn-sm" type="button" id="key-copy">Copy</button>
+                </div>
+              </div>
+
+              <form id="key-form" class="flex gap-sm items-end wrap-flex" novalidate>
+                <div class="notice notice-err mb-2" data-notice hidden style="flex-basis:100%"></div>
+                <div class="field" style="flex:1;min-width:200px;margin:0">
+                  <label for="key-name">New key name</label>
+                  <input class="input" type="text" id="key-name" name="name"
+                         placeholder="siem-pull" maxlength="60" required>
+                  <div class="err" data-err="name"></div>
+                </div>
+                <button class="btn btn-primary" type="submit">Create key</button>
+              </form>
+
+              <p class="text-muted mt-2" style="font-size:.82rem">
+                Keys are read-only and give access to the alert, incident and export endpoints.
+                See the <a href="/vigil-soc-website/api-docs.html">API reference</a>.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <span class="panel-title">Active sessions</span>
+            <span class="badge mono" data-session-count>&mdash;</span>
+          </div>
+          <div class="panel-body flush">
+            <div class="table-scroll">
+              <table class="data" style="min-width:0">
+                <thead><tr><th>Signed in</th><th>Address</th><th>State</th></tr></thead>
+                <tbody id="session-rows">
+                  <tr><td colspan="3" class="empty">Loading sessions&hellip;</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="pager">
+            <span>Sessions expire 12 hours after sign-in</span>
+            <button class="btn btn-ghost btn-sm" id="revoke-others">Sign out everywhere else</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- incident detail drawer -->
+<div class="drawer-backdrop" data-drawer-backdrop></div>
+<aside class="drawer" data-drawer aria-hidden="true" aria-label="Incident detail">
+  <div class="drawer-head">
+    <div>
+      <div class="mono text-accent" style="font-size:.75rem" data-drawer-id></div>
+      <h3 data-drawer-title style="margin-top:.2rem;font-size:1.05rem">Incident</h3>
+    </div>
+    <button class="drawer-close" data-drawer-close aria-label="Close">✕</button>
+  </div>
+  <div class="drawer-body" data-drawer-body></div>
+</aside>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="/vigil-soc-website/index.html">
+          <svg class="brand-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <path d="M16 2.5 4.5 7v9c0 7.1 4.8 11.8 11.5 13.8C22.7 27.8 27.5 23.1 27.5 16V7L16 2.5Z" stroke="#00f0a8" stroke-width="1.7" fill="rgba(0,240,168,.07)"/>
+            <circle cx="16" cy="15.5" r="2" fill="#00f0a8"/>
+            <path class="radar-arc" d="M16 9.5a6 6 0 0 1 6 6" stroke="#38ccff" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+          <span><span class="brand-text">VGIL</span><small>THREAT MONITORING</small></span>
+        </a>
+        <p class="footer-note">
+          Security operations and threat monitoring for organisations that cannot afford to be the
+          last to know. Detection, response and intelligence in one operation.
+        </p>
+        <p class="footer-note" style="color:var(--dim);opacity:.8">
+          VGIL is a demonstration project. The company, customers, incidents and threat data shown
+          here are fictional and generated for illustration.
+        </p>
+      </div>
+      <div>
+        <h5>Platform</h5>
+        <ul>
+          <li><a href="/vigil-soc-website/platform.html">How it works</a></li>
+          <li><a href="/vigil-soc-website/dashboard.html">Live SOC console</a></li>
+          <li><a href="/vigil-soc-website/incidents.html">Incident management</a></li>
+          <li><a href="/vigil-soc-website/threat-intel.html">Threat intelligence</a></li>
+          <li><a href="/vigil-soc-website/threat-intel.html#lookup">Indicator lookup</a></li>
+          <li><a href="/vigil-soc-website/exposure.html">Exposure management</a></li>
+          <li><a href="/vigil-soc-website/api-docs.html">API reference</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Services</h5>
+        <ul>
+          <li><a href="/vigil-soc-website/services.html#soc">24/7 SOC</a></li>
+          <li><a href="/vigil-soc-website/services.html#mdr">Managed detection &amp; response</a></li>
+          <li><a href="/vigil-soc-website/services.html#ir">Incident response</a></li>
+          <li><a href="/vigil-soc-website/services.html#vuln">Vulnerability management</a></li>
+          <li><a href="/vigil-soc-website/services.html#compliance">Compliance</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Company</h5>
+        <ul>
+          <li><a href="/vigil-soc-website/about.html">About VGIL</a></li>
+          <li><a href="/vigil-soc-website/research.html">Threat research</a></li>
+          <li><a href="/vigil-soc-website/compliance.html">Trust &amp; compliance</a></li>
+          <li><a href="/vigil-soc-website/pricing.html">Pricing</a></li>
+          <li><a href="/vigil-soc-website/contact.html">Contact</a></li>
+          <li><a href="/vigil-soc-website/login.html">Sign in</a></li>
+          <li><a href="/vigil-soc-website/signup.html">Create account</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span data-year>2026</span> VGIL Security Operations — demonstration project.</span>
+      <span class="mono">Incident desk: +1 (555) 0199-SOC · soc@vgil.io</span>
+    </div>
+  </div>
+</footer>
+
+<div class="toasts"></div>
+
+<script src="/vigil-soc-website/assets/js/static-api.js" data-base="/vigil-soc-website"></script>
+  <script src="/vigil-soc-website/assets/js/api.js"></script>
+<script src="/vigil-soc-website/assets/js/main.js"></script>
+<script src="/vigil-soc-website/assets/js/palette.js"></script>
+<script src="/vigil-soc-website/assets/js/effects.js"></script>
+<script src="/vigil-soc-website/assets/js/account.js"></script>
+</body>
+</html>

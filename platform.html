@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Platform — VGIL Detection Architecture</title>
+<meta name="description" content="How the VGIL detection platform works: telemetry ingestion, correlation, ATT&amp;CK-mapped detection rules, risk scoring and automated response.">
+<meta name="theme-color" content="#05080d">
+<link rel="icon" href="/vigil-soc-website/assets/img/favicon.svg" type="image/svg+xml">
+<!-- seo:begin -->
+<link rel="canonical" href="https://vgil.io/platform.html">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="VGIL">
+<meta property="og:title" content="Platform — VGIL Detection Architecture">
+<meta property="og:description" content="How the VGIL detection platform works: telemetry ingestion, correlation, ATT&amp;CK-mapped detection rules, risk scoring and automated response.">
+<meta property="og:url" content="https://vgil.io/platform.html">
+<meta property="og:image" content="https://vgil.io/assets/img/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="VGIL — security operations and threat monitoring">
+<meta property="og:locale" content="en_GB">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Platform — VGIL Detection Architecture">
+<meta name="twitter:description" content="How the VGIL detection platform works: telemetry ingestion, correlation, ATT&amp;CK-mapped detection rules, risk scoring and automated response.">
+<meta name="twitter:image" content="https://vgil.io/assets/img/og-card.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "VGIL",
+      "item": "https://vgil.io/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Platform — VGIL Detection Architecture",
+      "item": "https://vgil.io/platform.html"
+    }
+  ]
+}
+</script>
+<!-- seo:end -->
+<script src="/vigil-soc-website/assets/js/theme.js"></script>
+<link rel="stylesheet" href="/vigil-soc-website/assets/css/style.css">
+<noscript><style>.reveal{opacity:1;transform:none}</style></noscript>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap topbar-inner">
+    <div class="topbar-status"><span class="pulse"></span> SOC STATUS: OPERATIONAL</div>
+    <div class="topbar-feed"><span class="mono" data-ticker>establishing threat feed…</span></div>
+  </div>
+</div>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="/vigil-soc-website/index.html" aria-label="VGIL home">
+      <svg class="brand-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <path d="M16 2.5 4.5 7v9c0 7.1 4.8 11.8 11.5 13.8C22.7 27.8 27.5 23.1 27.5 16V7L16 2.5Z" stroke="url(#bm)" stroke-width="1.7" fill="rgba(0,240,168,.07)"/>
+        <circle cx="16" cy="15.5" r="2" fill="#00f0a8"/>
+        <path class="radar-arc" d="M16 9.5a6 6 0 0 1 6 6" stroke="#38ccff" stroke-width="1.6" stroke-linecap="round"/>
+        <path class="radar-arc" d="M16 12.5a3 3 0 0 1 3 3" stroke="#38ccff" stroke-width="1.6" stroke-linecap="round" opacity=".65"/>
+        <defs><linearGradient id="bm" x1="4" y1="2" x2="28" y2="30"><stop stop-color="#00f0a8"/><stop offset="1" stop-color="#38ccff"/></linearGradient></defs>
+      </svg>
+      <span><span class="brand-text">VGIL</span><small>THREAT MONITORING</small></span>
+    </a>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+
+    <ul class="nav-links">
+      <li><a href="/vigil-soc-website/services.html">Services</a></li>
+      <li><a href="/vigil-soc-website/platform.html">Platform</a></li>
+      <li><a href="/vigil-soc-website/threat-intel.html">Threat Intel</a></li>
+      <li><a href="/vigil-soc-website/dashboard.html">Live SOC</a></li>
+      <li><a href="/vigil-soc-website/incidents.html">Incidents</a></li>
+      <li><a href="/vigil-soc-website/pricing.html">Pricing</a></li>
+      <li><a href="/vigil-soc-website/about.html">About</a></li>
+      <li><a href="/vigil-soc-website/contact.html">Contact</a></li>
+    </ul>
+
+    <div class="nav-actions" data-auth-slot>
+      <button class="palette-trigger" type="button" data-palette-open aria-label="Open the command palette">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5" stroke-linecap="round"/></svg>
+        <span>Search</span><kbd>Ctrl K</kbd>
+      </button>
+      <button class="theme-toggle" type="button" aria-label="Switch between light and dark theme" title="Switch theme">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+      <a class="btn btn-ghost btn-sm" href="/vigil-soc-website/login.html">Sign in</a>
+      <a class="btn btn-primary btn-sm" href="/vigil-soc-website/contact.html">Book a demo</a>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <div class="page-head">
+    <div class="wrap">
+      <span class="eyebrow">Platform</span>
+      <h1>How a signal becomes a decision</h1>
+      <p class="lead mt-1">
+        The VGIL platform is a detection pipeline, not a dashboard. Everything below runs on the
+        same engine producing the alerts you can watch on the live console.
+      </p>
+    </div>
+  </div>
+
+  <!-- ================================================= PIPELINE DIAGRAM -->
+  <section class="band" style="padding:2.75rem 0">
+    <div class="wrap">
+      <div class="pipeline reveal">
+        <!--
+          Layout: every element in a stage is centred on that stage's centre
+          line (68 / 220 / 372 / 524 / 690) and stacked vertically —
+          icon 42-60, label baseline 79, caption baseline 93. Anchoring the
+          icon to the box edge while centring the label is what made them
+          collide.
+        -->
+        <!-- viewBox is sized to the content (x 8-720, y 1-122) so the diagram
+             is not padded off-centre by unused space on the right. -->
+        <svg viewBox="0 0 728 132" role="img"
+             aria-label="Detection pipeline: telemetry from endpoint, identity, network, cloud, email and database sources flows through ingest, correlate, detect and score stages, then to response.">
+
+          <!-- Track, then packets, then the opaque stage boxes on top: the
+               packets are hidden behind each box and reappear in the gaps,
+               so telemetry reads as passing through every stage. -->
+          <path class="pipe-track" d="M 68 71 H 690"/>
+
+          <g class="pipe-arrow">
+            <path d="M140 66.5 144.5 71 140 75.5"/>
+            <path d="M292 66.5 296.5 71 292 75.5"/>
+            <path d="M444 66.5 448.5 71 444 75.5"/>
+            <path d="M618 66.5 622.5 71 618 75.5"/>
+          </g>
+
+          <circle class="pipe-packet" r="3.5" cx="68" cy="71"/>
+          <circle class="pipe-packet" r="3.5" cx="68" cy="71"/>
+          <circle class="pipe-packet" r="3.5" cx="68" cy="71"/>
+
+          <!-- stage 1 · centre 68 -->
+          <rect class="pipe-stage" x="8" y="34" width="120" height="74" rx="9"/>
+          <g class="pipe-icon" transform="translate(59 42)">
+            <path d="M1 4h16M1 9h16M1 14h16M5 1v16"/>
+          </g>
+          <text class="pipe-label" x="68" y="79" text-anchor="middle">Ingest</text>
+          <text class="pipe-sub" x="68" y="93" text-anchor="middle">agents · APIs</text>
+
+          <!-- stage 2 · centre 220 -->
+          <rect class="pipe-stage" x="160" y="34" width="120" height="74" rx="9"/>
+          <g class="pipe-icon" transform="translate(211 42)">
+            <circle cx="9" cy="9" r="3.2"/>
+            <path d="M9 1.5v2.3M9 14.2v2.3M1.5 9h2.3M14.2 9h2.3"/>
+          </g>
+          <text class="pipe-label" x="220" y="79" text-anchor="middle">Correlate</text>
+          <text class="pipe-sub" x="220" y="93" text-anchor="middle">entity timelines</text>
+
+          <!-- stage 3 · centre 372 -->
+          <rect class="pipe-stage" x="312" y="34" width="120" height="74" rx="9"/>
+          <g class="pipe-icon" transform="translate(363 42)">
+            <path d="M9 1 2 3.8v4.6c0 4.3 3 7 7 8.4 4-1.4 7-4.1 7-8.4V3.8L9 1Z"/>
+            <path d="m6 9 2.3 2.3L13 6.8"/>
+          </g>
+          <text class="pipe-label" x="372" y="79" text-anchor="middle">Detect</text>
+          <text class="pipe-sub" x="372" y="93" text-anchor="middle">ATT&amp;CK rules</text>
+
+          <!-- stage 4 · centre 524 -->
+          <rect class="pipe-stage" x="464" y="34" width="120" height="74" rx="9"/>
+          <g class="pipe-icon" transform="translate(515 42)">
+            <path d="M2.5 16.5V10M9 16.5V3.5M15.5 16.5v-4.5"/>
+          </g>
+          <text class="pipe-label" x="524" y="79" text-anchor="middle">Score</text>
+          <text class="pipe-sub" x="524" y="93" text-anchor="middle">risk 0–100</text>
+
+          <!-- terminal · centre 690 -->
+          <circle cx="690" cy="71" r="30" fill="rgba(0,240,168,.1)" stroke="#00f0a8" stroke-width="1.5"/>
+          <g class="pipe-icon" transform="translate(681 62)">
+            <path d="M10 1 2.5 10.5H8l-1 6.5 7.5-9.5H9l1-6.5Z"/>
+          </g>
+          <text class="pipe-label" x="690" y="119" text-anchor="middle">Respond</text>
+
+          <!-- what feeds the front, and what leaves the back -->
+          <text class="pipe-sub" x="8" y="20" text-anchor="start">endpoint · identity · network · cloud · email · DB</text>
+          <text class="pipe-sub" x="464" y="20" text-anchor="start">threshold → analyst paged</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================================== PIPELINE -->
+  <section>
+    <div class="wrap">
+      <div class="grid g4">
+        <div class="card reveal">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h18M3 12h18M3 17h18M7 4v16"/></svg>
+          </div>
+          <h3>1 · Ingest</h3>
+          <p class="mt-1">Agents and API connectors pull endpoint, identity, network, cloud and SaaS
+          telemetry into a normalised schema. Roughly 1.4 million raw events per detection reach the
+          pipeline.</p>
+        </div>
+        <div class="card reveal" data-delay="80">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M18 6l-2.5 2.5M8.5 15.5 6 18"/></svg>
+          </div>
+          <h3>2 · Correlate</h3>
+          <p class="mt-1">Events are stitched into entity timelines — this user, this host, this
+          session — so a lateral movement chain reads as one story rather than forty disconnected
+          log lines.</p>
+        </div>
+        <div class="card reveal" data-delay="160">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v6c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V5l-8-3Z"/><path d="m9 12 2 2 4-4"/></svg>
+          </div>
+          <h3>3 · Detect &amp; score</h3>
+          <p class="mt-1">ATT&amp;CK-mapped rules and behavioural models fire. Each detection is
+          scored on rule severity, asset criticality and indicator confidence — the same formula
+          the API returns as <span class="mono text-accent">risk</span>.</p>
+        </div>
+        <div class="card reveal" data-delay="240">
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></svg>
+          </div>
+          <h3>4 · Respond</h3>
+          <p class="mt-1">Above your threshold, an analyst is paged and pre-authorised containment
+          runs. Everything is written to an immutable action log with attribution and a documented
+          rollback.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- =================================================== SCORING EXPLAINER -->
+  <section>
+    <div class="wrap">
+      <div class="split">
+        <div class="reveal">
+          <span class="eyebrow">Risk scoring</span>
+          <h2>Why the same alert means different things</h2>
+          <p class="lead mt-1">
+            A generic severity label is close to useless. The same detection on a domain controller
+            and on a designer's laptop demand completely different responses, so VGIL scores every
+            alert against the asset it landed on.
+          </p>
+
+          <div class="console mt-3">
+            <div class="console-bar">
+              <div class="console-dots"><i></i><i></i><i></i></div>
+              <span class="console-title">risk-scoring — engine.js</span>
+            </div>
+            <div class="console-body" data-typed style="height:auto;padding:1rem">
+              <div class="console-line"><span class="m"><span class="lv-info">risk</span> = severityWeight + assetCriticality + indicatorConfidence</span></div>
+              <div class="console-line"><span class="m text-dim">— severity   critical 45 · high 34 · medium 20 · low 10</span></div>
+              <div class="console-line"><span class="m text-dim">— asset      critical 30 · high 22 · medium 12 · low 5</span></div>
+              <div class="console-line"><span class="m text-dim">— confidence (0–100) × 0.25</span></div>
+              <div class="console-line"><span class="m">&nbsp;</span></div>
+              <div class="console-line"><span class="m"><span class="lv-critical">98</span>  ransomware canary · sql-fin-prod   → auto-contain + page</span></div>
+              <div class="console-line"><span class="m"><span class="lv-medium">51</span>  ransomware canary · mac-des-0187   → analyst triage queue</span></div>
+              <div class="console-line caret"><span class="m">&nbsp;</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal" data-delay="120">
+          <div class="panel">
+            <div class="panel-head"><span class="panel-title">Telemetry sources ingested</span></div>
+            <div class="panel-body">
+              <div class="metric-row"><span>Endpoint detection &amp; response</span><span class="v text-accent">✓</span></div>
+              <div class="metric-row"><span>Identity provider / SSO</span><span class="v text-accent">✓</span></div>
+              <div class="metric-row"><span>Active Directory / domain controllers</span><span class="v text-accent">✓</span></div>
+              <div class="metric-row"><span>Firewall &amp; network sensors</span><span class="v text-accent">✓</span></div>
+              <div class="metric-row"><span>DNS resolver logs</span><span class="v text-accent">✓</span></div>
+              <div class="metric-row"><span>Cloud audit logs (AWS, Azure, GCP)</span><span class="v text-accent">✓</span></div>
+              <div class="metric-row"><span>Container runtime &amp; Kubernetes</span><span class="v text-accent">✓</span></div>
+              <div class="metric-row"><span>Email security gateway</span><span class="v text-accent">✓</span></div>
+              <div class="metric-row"><span>Web application firewall</span><span class="v text-accent">✓</span></div>
+              <div class="metric-row"><span>Database audit logs</span><span class="v text-accent">✓</span></div>
+              <div class="metric-row"><span>File integrity monitoring</span><span class="v text-accent">✓</span></div>
+              <div class="metric-row"><span>Data loss prevention</span><span class="v text-accent">✓</span></div>
+            </div>
+          </div>
+
+          <div class="grid g2 mt-2">
+            <div class="stat"><div class="stat-label">Detection rules live</div><div class="stat-value text-accent" data-plat="rules">—</div></div>
+            <div class="stat is-info"><div class="stat-label">Assets monitored</div><div class="stat-value" style="color:var(--accent-2)" data-plat="assets">—</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ===================================================== ATT&CK MATRIX -->
+  <section>
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Coverage</span>
+        <h2>MITRE ATT&amp;CK detection matrix</h2>
+        <p class="lead mt-1">
+          Live coverage map. Hit counts come from detections actually fired by the engine in this
+          instance, not from a marketing slide.
+        </p>
+      </div>
+
+      <div class="matrix reveal" id="attack-matrix">
+        <div class="matrix-col"><div class="skeleton" style="height:180px"></div></div>
+        <div class="matrix-col"><div class="skeleton" style="height:180px"></div></div>
+        <div class="matrix-col"><div class="skeleton" style="height:180px"></div></div>
+        <div class="matrix-col"><div class="skeleton" style="height:180px"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ================================================== DETECTION RULES -->
+  <section>
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Rule catalog</span>
+        <h2>Every detection, published</h2>
+        <p class="lead mt-1">
+          We publish our rule logic. If you cannot see what a vendor detects, you cannot know what
+          they miss.
+        </p>
+      </div>
+
+      <div class="panel reveal">
+        <div class="panel-head">
+          <span class="panel-title">Detection rules</span>
+          <div class="filters">
+            <input class="input mono" type="search" id="rule-search" placeholder="Search rules, techniques…" aria-label="Search detection rules">
+            <select class="select" id="rule-severity" aria-label="Filter by severity">
+              <option value="">All severities</option>
+              <option value="critical">Critical</option>
+              <option value="high">High</option>
+              <option value="medium">Medium</option>
+              <option value="low">Low</option>
+            </select>
+          </div>
+        </div>
+        <div class="panel-body flush">
+          <div class="table-scroll">
+            <table class="data">
+              <thead>
+                <tr><th>Rule ID</th><th>Detection</th><th>Technique</th><th>Tactic</th><th>Severity</th><th>Source</th><th>Origin</th></tr>
+              </thead>
+              <tbody id="rules-body">
+                <tr><td colspan="7" class="empty">Loading detection rules…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="pager"><span id="rules-count">—</span><span>Click a rule for its response playbook</span></div>
+      </div>
+
+      <div class="panel mt-3 reveal" id="rule-editor" hidden>
+        <div class="panel-head">
+          <span class="panel-title">Author a detection rule</span>
+          <span class="badge mono" id="rule-pool">&mdash;</span>
+        </div>
+        <div class="panel-body">
+          <p class="text-muted" style="font-size:.88rem">
+            A rule written here joins the same detection pool as the built-in catalogue —
+            same weighting, same alert shape, and your response playbook shows on the alerts
+            it produces. Built-in rules stay read-only so an upstream detection is always
+            distinguishable from a local change.
+          </p>
+
+          <form id="rule-form" class="mt-3" novalidate>
+            <div class="notice notice-err mb-2" data-notice hidden></div>
+
+            <div class="grid g2" style="gap:1rem">
+              <div class="field" style="margin:0">
+                <label for="r-name">Rule name</label>
+                <input class="input" type="text" id="r-name" name="name" maxlength="120"
+                       placeholder="Finance VPN access outside business hours" required>
+                <div class="err" data-err="name"></div>
+              </div>
+
+              <div class="field" style="margin:0">
+                <label for="r-severity">Severity</label>
+                <select class="select" id="r-severity" name="severity" required></select>
+                <div class="err" data-err="severity"></div>
+              </div>
+            </div>
+
+            <div class="grid g2 mt-2" style="gap:1rem">
+              <div class="field" style="margin:0">
+                <label for="r-tactic">ATT&amp;CK tactic</label>
+                <select class="select" id="r-tactic" name="tactic"></select>
+                <div class="err" data-err="tactic"></div>
+              </div>
+
+              <div class="field" style="margin:0">
+                <label for="r-technique">ATT&amp;CK technique</label>
+                <input class="input mono" type="text" id="r-technique" name="technique"
+                       placeholder="T1078.004" maxlength="16">
+                <div class="err" data-err="technique"></div>
+              </div>
+            </div>
+
+            <div class="grid g2 mt-2" style="gap:1rem">
+              <div class="field" style="margin:0">
+                <label for="r-technique-name">Technique name</label>
+                <input class="input" type="text" id="r-technique-name" name="techniqueName"
+                       placeholder="Cloud Accounts" maxlength="80">
+                <div class="err" data-err="techniqueName"></div>
+              </div>
+
+              <div class="field" style="margin:0">
+                <label for="r-source">Telemetry source</label>
+                <input class="input" type="text" id="r-source" name="source"
+                       placeholder="VPN Concentrator" maxlength="60">
+                <div class="err" data-err="source"></div>
+              </div>
+            </div>
+
+            <div class="field mt-2">
+              <label for="r-description">What it detects</label>
+              <textarea class="input" id="r-description" name="description" rows="2" maxlength="400"
+                        placeholder="A finance account authenticated to the VPN outside 07:00-20:00 local time." required></textarea>
+              <div class="err" data-err="description"></div>
+            </div>
+
+            <div class="field">
+              <label for="r-response">Response playbook</label>
+              <textarea class="input" id="r-response" name="response" rows="2" maxlength="400"
+                        placeholder="Confirm with the account owner. Revoke the session if unrecognised."></textarea>
+              <div class="err" data-err="response"></div>
+            </div>
+
+            <fieldset class="field" style="border:0;padding:0">
+              <legend class="text-muted" style="font-size:.82rem;padding:0">
+                Fires on these asset types <span style="opacity:.7">(none selected = any)</span>
+              </legend>
+              <div class="flex gap-sm wrap-flex mt-1" id="r-asset-types"></div>
+              <div class="err" data-err="assetTypes"></div>
+            </fieldset>
+
+            <button class="btn btn-primary" type="submit">Create rule</button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="cta reveal">
+        <h2>Watch the pipeline run</h2>
+        <p class="lead mt-1" style="margin-inline:auto">
+          The live console shows detections arriving in real time, with the full triage workflow
+          an analyst uses. Sign in with the demo account and try it.
+        </p>
+        <div class="btn-row mt-3" style="justify-content:center">
+          <a class="btn btn-primary btn-lg" href="/vigil-soc-website/dashboard.html">Open the console</a>
+          <a class="btn btn-ghost btn-lg" href="/vigil-soc-website/threat-intel.html">Threat intelligence</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- rule detail drawer -->
+<div class="drawer-backdrop" data-drawer-backdrop></div>
+<aside class="drawer" data-drawer aria-hidden="true" aria-label="Rule details">
+  <div class="drawer-head">
+    <div>
+      <div class="mono text-accent" style="font-size:.75rem" data-drawer-id></div>
+      <h3 data-drawer-title style="margin-top:.2rem">Rule</h3>
+    </div>
+    <button class="drawer-close" data-drawer-close aria-label="Close">✕</button>
+  </div>
+  <div class="drawer-body" data-drawer-body></div>
+</aside>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="/vigil-soc-website/index.html">
+          <svg class="brand-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <path d="M16 2.5 4.5 7v9c0 7.1 4.8 11.8 11.5 13.8C22.7 27.8 27.5 23.1 27.5 16V7L16 2.5Z" stroke="#00f0a8" stroke-width="1.7" fill="rgba(0,240,168,.07)"/>
+            <circle cx="16" cy="15.5" r="2" fill="#00f0a8"/>
+            <path class="radar-arc" d="M16 9.5a6 6 0 0 1 6 6" stroke="#38ccff" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+          <span><span class="brand-text">VGIL</span><small>THREAT MONITORING</small></span>
+        </a>
+        <p class="footer-note">
+          Security operations and threat monitoring for organisations that cannot afford to be the
+          last to know. Detection, response and intelligence in one operation.
+        </p>
+        <p class="footer-note" style="color:var(--dim);opacity:.8">
+          VGIL is a demonstration project. The company, customers, incidents and threat data shown
+          here are fictional and generated for illustration.
+        </p>
+      </div>
+      <div>
+        <h5>Platform</h5>
+        <ul>
+          <li><a href="/vigil-soc-website/platform.html">How it works</a></li>
+          <li><a href="/vigil-soc-website/dashboard.html">Live SOC console</a></li>
+          <li><a href="/vigil-soc-website/incidents.html">Incident management</a></li>
+          <li><a href="/vigil-soc-website/threat-intel.html">Threat intelligence</a></li>
+          <li><a href="/vigil-soc-website/threat-intel.html#lookup">Indicator lookup</a></li>
+          <li><a href="/vigil-soc-website/exposure.html">Exposure management</a></li>
+          <li><a href="/vigil-soc-website/api-docs.html">API reference</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Services</h5>
+        <ul>
+          <li><a href="/vigil-soc-website/services.html#soc">24/7 SOC</a></li>
+          <li><a href="/vigil-soc-website/services.html#mdr">Managed detection &amp; response</a></li>
+          <li><a href="/vigil-soc-website/services.html#ir">Incident response</a></li>
+          <li><a href="/vigil-soc-website/services.html#vuln">Vulnerability management</a></li>
+          <li><a href="/vigil-soc-website/services.html#compliance">Compliance</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Company</h5>
+        <ul>
+          <li><a href="/vigil-soc-website/about.html">About VGIL</a></li>
+          <li><a href="/vigil-soc-website/research.html">Threat research</a></li>
+          <li><a href="/vigil-soc-website/compliance.html">Trust &amp; compliance</a></li>
+          <li><a href="/vigil-soc-website/pricing.html">Pricing</a></li>
+          <li><a href="/vigil-soc-website/contact.html">Contact</a></li>
+          <li><a href="/vigil-soc-website/login.html">Sign in</a></li>
+          <li><a href="/vigil-soc-website/signup.html">Create account</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span data-year>2026</span> VGIL Security Operations — demonstration project.</span>
+      <span class="mono">Incident desk: +1 (555) 0199-SOC · soc@vgil.io</span>
+    </div>
+  </div>
+</footer>
+
+<div class="toasts"></div>
+
+<script src="/vigil-soc-website/assets/js/static-api.js" data-base="/vigil-soc-website"></script>
+  <script src="/vigil-soc-website/assets/js/api.js"></script>
+<script src="/vigil-soc-website/assets/js/main.js"></script>
+<script src="/vigil-soc-website/assets/js/palette.js"></script>
+<script src="/vigil-soc-website/assets/js/effects.js"></script>
+<script src="/vigil-soc-website/assets/js/platform.js"></script>
+</body>
+</html>

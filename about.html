@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About — VGIL Security Operations</title>
+<meta name="description" content="Who VGIL is, how the security operations centre is run, and the principles behind how we handle customer telemetry.">
+<meta name="theme-color" content="#05080d">
+<link rel="icon" href="/vigil-soc-website/assets/img/favicon.svg" type="image/svg+xml">
+<!-- seo:begin -->
+<link rel="canonical" href="https://vgil.io/about.html">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="VGIL">
+<meta property="og:title" content="About — VGIL Security Operations">
+<meta property="og:description" content="Who VGIL is, how the security operations centre is run, and the principles behind how we handle customer telemetry.">
+<meta property="og:url" content="https://vgil.io/about.html">
+<meta property="og:image" content="https://vgil.io/assets/img/og-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="VGIL — security operations and threat monitoring">
+<meta property="og:locale" content="en_GB">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="About — VGIL Security Operations">
+<meta name="twitter:description" content="Who VGIL is, how the security operations centre is run, and the principles behind how we handle customer telemetry.">
+<meta name="twitter:image" content="https://vgil.io/assets/img/og-card.png">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "VGIL",
+      "item": "https://vgil.io/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "About — VGIL Security Operations",
+      "item": "https://vgil.io/about.html"
+    }
+  ]
+}
+</script>
+<!-- seo:end -->
+<script src="/vigil-soc-website/assets/js/theme.js"></script>
+<link rel="stylesheet" href="/vigil-soc-website/assets/css/style.css">
+<noscript><style>.reveal{opacity:1;transform:none}</style></noscript>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap topbar-inner">
+    <div class="topbar-status"><span class="pulse"></span> SOC STATUS: OPERATIONAL</div>
+    <div class="topbar-feed"><span class="mono" data-ticker>establishing threat feed…</span></div>
+  </div>
+</div>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="/vigil-soc-website/index.html" aria-label="VGIL home">
+      <svg class="brand-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <path d="M16 2.5 4.5 7v9c0 7.1 4.8 11.8 11.5 13.8C22.7 27.8 27.5 23.1 27.5 16V7L16 2.5Z" stroke="url(#bm)" stroke-width="1.7" fill="rgba(0,240,168,.07)"/>
+        <circle cx="16" cy="15.5" r="2" fill="#00f0a8"/>
+        <path class="radar-arc" d="M16 9.5a6 6 0 0 1 6 6" stroke="#38ccff" stroke-width="1.6" stroke-linecap="round"/>
+        <path class="radar-arc" d="M16 12.5a3 3 0 0 1 3 3" stroke="#38ccff" stroke-width="1.6" stroke-linecap="round" opacity=".65"/>
+        <defs><linearGradient id="bm" x1="4" y1="2" x2="28" y2="30"><stop stop-color="#00f0a8"/><stop offset="1" stop-color="#38ccff"/></linearGradient></defs>
+      </svg>
+      <span><span class="brand-text">VGIL</span><small>THREAT MONITORING</small></span>
+    </a>
+
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+    </button>
+
+    <ul class="nav-links">
+      <li><a href="/vigil-soc-website/services.html">Services</a></li>
+      <li><a href="/vigil-soc-website/platform.html">Platform</a></li>
+      <li><a href="/vigil-soc-website/threat-intel.html">Threat Intel</a></li>
+      <li><a href="/vigil-soc-website/dashboard.html">Live SOC</a></li>
+      <li><a href="/vigil-soc-website/incidents.html">Incidents</a></li>
+      <li><a href="/vigil-soc-website/pricing.html">Pricing</a></li>
+      <li><a href="/vigil-soc-website/about.html">About</a></li>
+      <li><a href="/vigil-soc-website/contact.html">Contact</a></li>
+    </ul>
+
+    <div class="nav-actions" data-auth-slot>
+      <button class="palette-trigger" type="button" data-palette-open aria-label="Open the command palette">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5" stroke-linecap="round"/></svg>
+        <span>Search</span><kbd>Ctrl K</kbd>
+      </button>
+      <button class="theme-toggle" type="button" aria-label="Switch between light and dark theme" title="Switch theme">
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+      <a class="btn btn-ghost btn-sm" href="/vigil-soc-website/login.html">Sign in</a>
+      <a class="btn btn-primary btn-sm" href="/vigil-soc-website/contact.html">Book a demo</a>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <div class="page-head">
+    <div class="wrap">
+      <span class="eyebrow">About</span>
+      <h1>Vigilance, as an operating discipline</h1>
+      <p class="lead mt-1">
+        VGIL exists because most organisations discover an intrusion from a third party — a
+        customer, a journalist, or the attacker's own ransom note. We think that is a solvable
+        problem, and that solving it should not require building a security department.
+      </p>
+    </div>
+  </div>
+
+  <!-- ============================================================ STORY -->
+  <section>
+    <div class="wrap">
+      <div class="split">
+        <div class="reveal">
+          <h2>Why we built this</h2>
+          <p class="lead mt-1">
+            Our founding team spent a decade responding to incidents at organisations that had
+            already bought good tools. The tooling was rarely the problem. The problem was that
+            at 03:00 on a Sunday, the alert that mattered landed in a queue nobody was reading.
+          </p>
+          <p class="lead mt-1">
+            Detection without an operation behind it is theatre. VGIL is built the other way
+            round: the operation comes first, the technology exists to make the analysts faster,
+            and the measure of success is how quickly a real attack is stopped — not how many
+            alerts the platform produced.
+          </p>
+
+          <div class="grid g2 mt-3">
+            <div class="stat"><div class="stat-label">Founded</div><div class="stat-value" data-nocount>2019</div></div>
+            <div class="stat is-info"><div class="stat-label">Analysts on staff</div><div class="stat-value" style="color:var(--accent-2)">64</div></div>
+            <div class="stat"><div class="stat-label">Customer estates</div><div class="stat-value">210+</div></div>
+            <div class="stat is-high"><div class="stat-label">Incidents handled</div><div class="stat-value" style="color:var(--high)">3,400+</div></div>
+          </div>
+        </div>
+
+        <div class="reveal" data-delay="120">
+          <div class="panel">
+            <div class="panel-head"><span class="panel-title">Operating principles</span></div>
+            <div class="panel-body">
+              <h4 class="text-accent">Say what you actually detect</h4>
+              <p style="font-size:.88rem;margin-bottom:1.1rem">Our rule catalog is published. If a
+              technique is not covered, we say so rather than hiding behind "advanced AI".</p>
+
+              <h4 class="text-accent">The clock is the metric</h4>
+              <p style="font-size:.88rem;margin-bottom:1.1rem">Time to detect, time to acknowledge,
+              time to contain. Alert counts and dashboard density measure nothing worth measuring.</p>
+
+              <h4 class="text-accent">Never act outside the runbook</h4>
+              <p style="font-size:.88rem;margin-bottom:1.1rem">An unauthorised containment action
+              that breaks a production system is our failure, not a necessary cost of speed.</p>
+
+              <h4 class="text-accent">Blameless, but not consequence-free</h4>
+              <p style="font-size:.88rem;margin-bottom:1.1rem">Every miss gets written up and every
+              write-up changes something concrete — a rule, a runbook, a rota.</p>
+
+              <h4 class="text-accent">Your telemetry is yours</h4>
+              <p style="font-size:.88rem">We do not sell it, share it, or train models on it. You
+              can export all of it, in open formats, on any day of the contract.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ========================================================== THE SOC -->
+  <section>
+    <div class="wrap">
+      <div class="section-head center-narrow reveal">
+        <span class="eyebrow">The operation</span>
+        <h2>How the SOC is actually staffed</h2>
+        <p class="lead mt-1">
+          Three regional centres on an eight-hour handover cycle. Nobody works a night shift, so
+          nobody triages your critical alert at 04:00 on their fourth consecutive night.
+        </p>
+      </div>
+
+      <div class="grid g3">
+        <div class="card reveal">
+          <div class="badge mb-2 mono">UTC+0 · DUBLIN</div>
+          <h3>Europe centre</h3>
+          <p class="mt-1">Covers 06:00–14:00 UTC. Primary for EMEA customers and the compliance
+          engineering team. 22 analysts across Tier 1–3.</p>
+        </div>
+        <div class="card reveal" data-delay="80">
+          <div class="badge mb-2 mono">UTC−5 · TORONTO</div>
+          <h3>Americas centre</h3>
+          <p class="mt-1">Covers 14:00–22:00 UTC. Home of the incident response practice and the
+          forensics lab. 24 analysts and 6 responders.</p>
+        </div>
+        <div class="card reveal" data-delay="160">
+          <div class="badge mb-2 mono">UTC+8 · SINGAPORE</div>
+          <h3>APAC centre</h3>
+          <p class="mt-1">Covers 22:00–06:00 UTC. Runs the threat intelligence team and overnight
+          hunting programme. 18 analysts and 4 intel researchers.</p>
+        </div>
+      </div>
+
+      <div class="panel mt-3 reveal">
+        <div class="panel-head"><span class="panel-title">Handover discipline</span></div>
+        <div class="panel-body">
+          <div class="grid g2" style="gap:2rem">
+            <div>
+              <p style="font-size:.9rem">Every shift ends with a live handover call, not a written
+              note. Open incidents are walked through case by case, with the incoming shift lead
+              repeating back the state of each one before the outgoing lead signs off.</p>
+              <p style="font-size:.9rem;margin-top:.9rem">Any incident older than one shift gets a
+              named owner who follows it across handovers, so nothing becomes everybody's
+              problem and therefore nobody's.</p>
+            </div>
+            <div>
+              <div class="metric-row"><span>Handover calls per day</span><span class="v">3</span></div>
+              <div class="metric-row"><span>Maximum shift length</span><span class="v">9 hours</span></div>
+              <div class="metric-row"><span>Analyst-to-tenant ratio</span><span class="v">1 : 3.3</span></div>
+              <div class="metric-row"><span>Tier 3 hunters on staff</span><span class="v">11</span></div>
+              <div class="metric-row"><span>Median analyst tenure</span><span class="v">3.8 years</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- =========================================================== PEOPLE -->
+  <section>
+    <div class="wrap">
+      <div class="section-head center-narrow reveal">
+        <span class="eyebrow">Leadership</span>
+        <h2>Who runs the operation</h2>
+      </div>
+
+      <div class="people reveal">
+        <div class="person">
+          <div class="avatar">VP</div>
+          <strong>Vandit B Patel</strong>
+          <div class="role">Co-Founder &amp; Director</div>
+        </div>
+        <div class="person">
+          <div class="avatar">JP</div>
+          <strong>Jayesh Patil</strong>
+          <div class="role">Co-Founder &amp; Director</div>
+        </div>
+        <div class="person">
+          <div class="avatar">JV</div>
+          <strong>Jayveer Vasava</strong>
+          <div class="role">Co-Founder &amp; Director</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- ======================================================= COMPLIANCE -->
+  <section>
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Assurance</span>
+        <h2>How we hold ourselves to it</h2>
+      </div>
+
+      <div class="grid g3">
+        <div class="card reveal">
+          <h3>Certifications</h3>
+          <ul class="feature-list mt-1">
+            <li>ISO/IEC 27001:2022</li>
+            <li>SOC 2 Type II (annual)</li>
+            <li>ISO 22301 business continuity</li>
+            <li>Cyber Essentials Plus</li>
+          </ul>
+        </div>
+        <div class="card reveal" data-delay="80">
+          <h3>Internal controls</h3>
+          <ul class="feature-list mt-1">
+            <li>Hardware-key MFA for all analyst access</li>
+            <li>Just-in-time privilege, no standing admin</li>
+            <li>Every customer data access audit-logged</li>
+            <li>Quarterly independent penetration test</li>
+          </ul>
+        </div>
+        <div class="card reveal" data-delay="160">
+          <h3>Transparency</h3>
+          <ul class="feature-list mt-1">
+            <li>Published detection rule catalog</li>
+            <li>Monthly false-positive rate reported to you</li>
+            <li>SLA performance published per tenant</li>
+            <li>Breach notification within 24 hours, always</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="cta reveal">
+        <h2>Come and audit us</h2>
+        <p class="lead mt-1" style="margin-inline:auto">
+          Prospective customers are welcome to review our controls, interview the analysts who
+          would cover their estate, and read a real incident write-up before signing anything.
+        </p>
+        <div class="btn-row mt-3" style="justify-content:center">
+          <a class="btn btn-primary btn-lg" href="/vigil-soc-website/contact.html">Talk to us</a>
+          <a class="btn btn-ghost btn-lg" href="/vigil-soc-website/platform.html">See the platform</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <a class="brand" href="/vigil-soc-website/index.html">
+          <svg class="brand-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <path d="M16 2.5 4.5 7v9c0 7.1 4.8 11.8 11.5 13.8C22.7 27.8 27.5 23.1 27.5 16V7L16 2.5Z" stroke="#00f0a8" stroke-width="1.7" fill="rgba(0,240,168,.07)"/>
+            <circle cx="16" cy="15.5" r="2" fill="#00f0a8"/>
+            <path class="radar-arc" d="M16 9.5a6 6 0 0 1 6 6" stroke="#38ccff" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+          <span><span class="brand-text">VGIL</span><small>THREAT MONITORING</small></span>
+        </a>
+        <p class="footer-note">
+          Security operations and threat monitoring for organisations that cannot afford to be the
+          last to know. Detection, response and intelligence in one operation.
+        </p>
+        <p class="footer-note" style="color:var(--dim);opacity:.8">
+          VGIL is a demonstration project. The company, customers, incidents and threat data shown
+          here are fictional and generated for illustration.
+        </p>
+      </div>
+      <div>
+        <h5>Platform</h5>
+        <ul>
+          <li><a href="/vigil-soc-website/platform.html">How it works</a></li>
+          <li><a href="/vigil-soc-website/dashboard.html">Live SOC console</a></li>
+          <li><a href="/vigil-soc-website/incidents.html">Incident management</a></li>
+          <li><a href="/vigil-soc-website/threat-intel.html">Threat intelligence</a></li>
+          <li><a href="/vigil-soc-website/threat-intel.html#lookup">Indicator lookup</a></li>
+          <li><a href="/vigil-soc-website/exposure.html">Exposure management</a></li>
+          <li><a href="/vigil-soc-website/api-docs.html">API reference</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Services</h5>
+        <ul>
+          <li><a href="/vigil-soc-website/services.html#soc">24/7 SOC</a></li>
+          <li><a href="/vigil-soc-website/services.html#mdr">Managed detection &amp; response</a></li>
+          <li><a href="/vigil-soc-website/services.html#ir">Incident response</a></li>
+          <li><a href="/vigil-soc-website/services.html#vuln">Vulnerability management</a></li>
+          <li><a href="/vigil-soc-website/services.html#compliance">Compliance</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Company</h5>
+        <ul>
+          <li><a href="/vigil-soc-website/about.html">About VGIL</a></li>
+          <li><a href="/vigil-soc-website/research.html">Threat research</a></li>
+          <li><a href="/vigil-soc-website/compliance.html">Trust &amp; compliance</a></li>
+          <li><a href="/vigil-soc-website/pricing.html">Pricing</a></li>
+          <li><a href="/vigil-soc-website/contact.html">Contact</a></li>
+          <li><a href="/vigil-soc-website/login.html">Sign in</a></li>
+          <li><a href="/vigil-soc-website/signup.html">Create account</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span data-year>2026</span> VGIL Security Operations — demonstration project.</span>
+      <span class="mono">Incident desk: +1 (555) 0199-SOC · soc@vgil.io</span>
+    </div>
+  </div>
+</footer>
+
+<div class="toasts"></div>
+
+<script src="/vigil-soc-website/assets/js/static-api.js" data-base="/vigil-soc-website"></script>
+  <script src="/vigil-soc-website/assets/js/api.js"></script>
+<script src="/vigil-soc-website/assets/js/main.js"></script>
+<script src="/vigil-soc-website/assets/js/palette.js"></script>
+<script src="/vigil-soc-website/assets/js/effects.js"></script>
+</body>
+</html>
