@@ -341,6 +341,23 @@ See `.env.example` for the annotated list. The ones that matter:
 - The detection engine writes continuously, so the disk grows until the 600-alert
   retention cap kicks in.
 
+### GitHub Pages demo
+
+GitHub Pages only serves static files, so it cannot run the API. `npm run build:pages`
+builds a self-contained demo into `_site/` instead:
+
+- every root-relative link is prefixed with the Pages sub-path (`/vigil-soc-website`
+  by default; pass another base, or `""` for a domain root, as the first argument);
+- `tools/pages/static-api.js` is loaded before `api.js` and answers `/api/*` requests
+  and the live alert stream inside the browser, from `tools/pages/demo-data.json` — a
+  snapshot of a real server. Filters, search, paging, triage, escalation and sign-up
+  work; changes are kept in the visitor's own browser only.
+
+Sign in with the demo accounts above. Password reset, two-factor setup, API keys,
+email and webhooks need the real server and are switched off in the demo.
+
+The built site is published from the `gh-pages` branch.
+
 ---
 
 ## Tests

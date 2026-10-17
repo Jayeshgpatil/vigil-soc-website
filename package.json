@@ -12,6 +12,7 @@
     "test": "node --disable-warning=ExperimentalWarning --test",
     "migrate": "node --disable-warning=ExperimentalWarning -e \"const d=require('./server/db');d.open();console.log('schema v'+require('./server/db/migrate').currentVersion(d.handle()));d.close()\"",
     "vendor": "node tools/vendor.js",
+    "build:pages": "node tools/build-pages.js",
     "postinstall": "node tools/vendor.js"
   },
   "engines": {

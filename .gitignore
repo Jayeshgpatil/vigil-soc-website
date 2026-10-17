@@ -12,6 +12,9 @@ server/data/.secret
 server/data/db.json
 server/data/*.tmp
 
+# Static GitHub Pages build (published to the gh-pages branch)
+_site/
+
 npm-debug.log*
 .env
 .DS_Store
